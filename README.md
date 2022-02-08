@@ -1,1 +1,3 @@
 # SeniorProject
+
+Author: Zongjing Chen
