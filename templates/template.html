@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CustomRobot</title>
+<!--    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">-->
+</head>
+<body>
+<!-- The js file should be the result file created by compiler-->
+<!--    <script type="module" src="templateFbxLoader.js"></script>-->
+<!--    <script type="module" src="../src/testCompiledCode.js"></script>-->
+    <script type="module">
+        /**
+         * Conference: https://threejs.org/examples/webgl_loader_fbx.html
+         */
+        import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
+        import {OrbitControls} from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
+        import {FBXLoader} from 'https://unpkg.com/three@0.126.1/examples/jsm/loaders/FBXLoader.js';
+        import {SkeletonUtils} from 'https://unpkg.com/three@0.126.1/examples/jsm/utils/SkeletonUtils.js'
+        import Stats from 'https://unpkg.com/three@0.126.1/examples/jsm/libs/stats.module.js';
+        let camera, scene, renderer, mixer, stats, human;
+        // const animationActions = [];
+        const HUMAN_MODEL_PATH = '../res/models/Samba Dancing.fbx';
+        const ROBOT_MODEL_PATH = '../res/models/';
+        const clock = new THREE.Clock();
+        const loader = new FBXLoader();
+        const DEG_TO_RAD = Math.PI / 180;
+        const FPS = 60;
+
+        init();
+
+        function init() {
+            const container = document.createElement( 'div' );
+            document.body.appendChild( container );
+            camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+            camera.position.set( 100, 200, 300 );
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color( 0xa0a0a0 );
+            // light
+            const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+            hemiLight.position.set( 0, 200, 0 );
+            scene.add( hemiLight );
+            // ground
+            const mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+            mesh.rotation.x = - Math.PI / 2;
+            mesh.receiveShadow = true;
+            scene.add( mesh );
+            // grid
+            const grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
+            grid.material.opacity = 0.2;
+            grid.material.transparent = true;
+            scene.add( grid );
+            // renderer
+            renderer = new THREE.WebGLRenderer( { antialias: true } );
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.shadowMap.enabled = true;
+            container.appendChild( renderer.domElement );
+            // mouse control
+            const controls = new OrbitControls( camera, renderer.domElement );
+            controls.target.set( 0, 100, 0 );
+            controls.update();
+            window.addEventListener( 'resize', onWindowResize );
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize( window.innerWidth, window.innerHeight );
+            }
+            // stats
+            stats = new Stats();
+            container.appendChild( stats.dom );
+
+            loader.load( HUMAN_MODEL_PATH, function ( object ) {
+                mixer = new THREE.AnimationMixer(object);
+                // load object and add to scene
+                // const model = mixer.clipAction(object.animations[0]);
+                // model.play();
+
+                // const animationAction = mixer.clipAction(object.animations[0]);
+                // animationAction.reset();
+                // animationAction.play();
+
+
+                // console.log(animationAction);
+                // animationAction.reset();
+                // animationAction.play();
+                scene.add(object);
+                human = new Human(object);
+                human.playAnimation(object);
+            })
+        }
+
+        class Human {
+            constructor(object){
+                // this.loader = loader;
+                // this.clock = clock;
+                // this.scene = scene;
+                // this.camera = camera;
+                // this.renderer = renderer;
+                this.object = object;
+                // this.skeletonHelper = new THREE.SkeletonHelper(object.children[2]);
+                // this.skeleton = object.children[2].skeleton;
+                // this.leftArm = SkeletonUtils.getBoneByName("mixamorigLeftArm", this.skeleton);
+                // this.rightArm = SkeletonUtils.getBoneByName("mixamorigRightArm", this.skeleton);
+            }
+
+            playAnimation() {
+                /**
+                 *  Body parts
+                 */
+                // TODO: Add all body parts
+                const skeleton = this.object.children[2].skeleton;
+                const action = mixer.clipAction(this.object.animations[0]);
+                // action.timeScale = 30;
+                console.log(action);
+                const leftArm = SkeletonUtils.getBoneByName("mixamorigLeftArm", skeleton);
+
+                const rightArm = SkeletonUtils.getBoneByName("mixamorigRightArm", skeleton);
+
+                // praise the sun
+                // SkeletonUtils.getBoneByName("mixamorigHead", skeleton).rotation.x = -5 * DEG_TO_RAD;
+                // SkeletonUtils.getBoneByName("mixamorigSpine2", skeleton).rotation.x = -15 * DEG_TO_RAD;
+                // leftArm.rotation.z = 35 * DEG_TO_RAD;
+                // leftArm.rotation.x = -5 * DEG_TO_RAD;
+                // rightArm.rotation.z = -35 * DEG_TO_RAD;
+                // rightArm.rotation.x = -5 * DEG_TO_RAD;
+
+                // normal standing
+                {
+                    leftArm.rotation.z = -85 * DEG_TO_RAD;
+                    leftArm.rotation.x = -5 * DEG_TO_RAD;
+                    rightArm.rotation.z = 85 * DEG_TO_RAD;
+                    rightArm.rotation.x = -5 * DEG_TO_RAD;
+
+                    SkeletonUtils.getBoneByName("mixamorigLeftHand", skeleton).rotation.z = -10 * DEG_TO_RAD;
+                    SkeletonUtils.getBoneByName("mixamorigRightHand", skeleton).rotation.z = 10 * DEG_TO_RAD;
+
+                    SkeletonUtils.getBoneByName("mixamorigLeftHandThumb1", skeleton).rotation.z = 25 * DEG_TO_RAD;
+                    SkeletonUtils.getBoneByName("mixamorigRightHandThumb1", skeleton).rotation.z = -25 * DEG_TO_RAD;
+                    SkeletonUtils.getBoneByName("mixamorigRightHandThumb1", skeleton).rotation.x = -10 * DEG_TO_RAD;
+                    SkeletonUtils.getBoneByName("mixamorigRightHandThumb1", skeleton).rotation.x = -10 * DEG_TO_RAD;
+
+                    SkeletonUtils.getBoneByName("mixamorigLeftLeg", skeleton).rotation.z = -5 * DEG_TO_RAD;
+                    SkeletonUtils.getBoneByName("mixamorigRightLeg", skeleton).rotation.z = 5 * DEG_TO_RAD;
+                }
+
+                const prefix = "mixamorig";
+                const bodyPartSet = [
+                    "Hips", "Spine", "Spine1", "Spine2", "Neck", "Head",
+                    "LeftShoulder", "LeftArm", "LeftForeArm", "LeftHand",
+                    "RightShoulder", "RightArm", "RightForeArm", "RightHand",
+                    "LeftLeg", "LeftUpLeg", "LeftFoot", "LeftToeBase",
+                    "RightLeg", "RightUpLeg", "RightFoot", "RightToeBase"];
+                animate();
+                console.log(this.object);
+                // console.log(skeleton);
+                var delta = 0;
+                function animate(){
+                    requestAnimationFrame(animate);
+                    /**
+                     * Compiled code should be inserted here.
+                     */
+                    riseLeftArm(200, 5);
+                    riseRightArm(-90, 3);
+                    // dance();
+                    // if(delta > 1){
+                    //     stopDance();
+                    // }
+
+                    delta += clock.getDelta();
+
+
+                    renderer.render(scene, camera);
+
+                    mixer.update(1/60);
+
+                    // console.log(clock.getDelta());
+
+                    stats.update();
+
+                    function riseLeftArm(degree, time){
+                        if(delta <= time){
+                            if(degree <= -60) {
+                                degree = -60;
+                            }
+                            else if(degree >= 180) {
+                                degree = 180;
+                            }
+                            degree *= -1;
+                            leftArm.rotation.x += degree * DEG_TO_RAD / (FPS * time);
+                        }
+                    }
+
+                    function riseRightArm(degree, time){
+                        if(delta <= time){
+                            if(degree <= -60) {
+                                degree = -60;
+                            }
+                            else if(degree >= 180) {
+                                degree = 180;
+                            }
+                            rightArm.rotation.x += degree * DEG_TO_RAD / (FPS * time);
+                        }
+                    }
+
+                    function dance(){
+                        if(!action.isRunning()){
+                            action.play()
+                            console.log("Start play")
+                        }
+                        // mixer.update(clock.getDelta());
+                    }
+
+                    function stopDance() {
+                        if(action.isRunning()) {
+                            action.stop();
+                            // console.log("stop");
+                        }
+                    }
+                    // TODO more functions to add
+                }
+            }
+        }
+
+        class Robot{
+            // TODO finish Robot Class
+        }
+    </script>
+</body>
+</html>

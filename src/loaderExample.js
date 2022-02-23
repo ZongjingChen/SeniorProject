@@ -1,15 +1,11 @@
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
-
-// import Stats from './jsm/libs/stats.module.js';
 import Stats from 'https://unpkg.com/three@0.126.1/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
-// import { OrbitControls } from './jsm/controls/OrbitControls.js';
 import { FBXLoader } from 'https://unpkg.com/three@0.126.1/examples/jsm/loaders/FBXLoader.js';
 
 let camera, scene, renderer, stats;
 const animationActions = [];
 const clock = new THREE.Clock();
-let ready = false;
 let mixer;
 
 start();
@@ -75,7 +71,7 @@ function init() {
 
     // model
     const loader = new FBXLoader();
-    loader.load( 'Samba Dancing.fbx', function ( object ) {
+    loader.load( 'res/models/Samba Dancing.fbx', function ( object ) {
         mixer = new THREE.AnimationMixer( object );
         const action = mixer.clipAction( object.animations[ 1 ] );
         // action.timeScale = 2;

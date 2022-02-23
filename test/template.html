@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test!!!!!</title>
+<!--    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">-->
+</head>
+<body>
+<!-- The js file should be the result file created by compiler-->
+    <script type="module" src="templateFbxLoader.js"></script>
+</body>
+</html>
+
+
+
+
+Head.rotate(deg, x, sec)
+leftArm.rotate(deg2, y, sec2)
+
+1) set unique time for a sim function - every action in this function will
+    take the same time.
+
+sim function xxx(time){
+    Head.rotate(deg3, x)
+    rightArm.rotate(deg4, z)
+}
+
+2) set time separately for each command in sim function, each action will have
+    unique time - wait until all actions finish
+
+sim function xxx(){
+    Head.rotate(deg3, x, time3)
+    rightArm.rotate(deg4, z, time4)
+}
+
+3) normal function: execute continuously
+seq (){
+
+}
+
+start new timer
+while time elapsed <= 1:
+    head.x.rotation += deg / (fps * sec)
+
+reset timer
+while time elapsed <= sec2:
+    leftArm.y.rotation += deg2 / (fps * sec2)
+
+
