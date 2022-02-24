@@ -26,6 +26,23 @@
         const loader = new FBXLoader();
         const DEG_TO_RAD = Math.PI / 180;
         const FPS = 60;
+        // Three axes
+        const X = new THREE.Vector3(1, 0, 0);
+        const Y = new THREE.Vector3(0, 1, 0);
+        const Z = new THREE.Vector3(0, 0, 1);
+
+
+        // Some limitations of human body
+        const SHOULDER_TO_ARM_RATIO_X = 0.5;
+        const ARM_FRONT_DEGREE_MAX = 180;
+        const ARM_BACK_DEGREE_MAX = -60;
+
+        const SHOULDER_TO_ARM_RATIO_Z = 0.5;
+        const ARM_OUT_DEGREE_MAX = 180;
+        const ARM_IN_DEGREE_MAX = 45;
+
+        const HEAD_ROTATION_MAX = 90;
+
 
         init();
 
@@ -111,11 +128,7 @@
                 // TODO: Add all body parts
                 const skeleton = this.object.children[2].skeleton;
                 const action = mixer.clipAction(this.object.animations[0]);
-                // action.timeScale = 30;
                 console.log(action);
-                const leftArm = SkeletonUtils.getBoneByName("mixamorigLeftArm", skeleton);
-
-                const rightArm = SkeletonUtils.getBoneByName("mixamorigRightArm", skeleton);
 
                 // praise the sun
                 // SkeletonUtils.getBoneByName("mixamorigHead", skeleton).rotation.x = -5 * DEG_TO_RAD;
@@ -125,12 +138,14 @@
                 // rightArm.rotation.z = -35 * DEG_TO_RAD;
                 // rightArm.rotation.x = -5 * DEG_TO_RAD;
 
-                // normal standing
+                // Original state
                 {
-                    leftArm.rotation.z = -85 * DEG_TO_RAD;
-                    leftArm.rotation.x = -5 * DEG_TO_RAD;
-                    rightArm.rotation.z = 85 * DEG_TO_RAD;
-                    rightArm.rotation.x = -5 * DEG_TO_RAD;
+                    SkeletonUtils.getBoneByName("mixamorigLeftArm", skeleton).rotation.x = -5 * DEG_TO_RAD;
+                    SkeletonUtils.getBoneByName("mixamorigLeftArm", skeleton).rotation.z = -85 * DEG_TO_RAD;
+
+
+                    SkeletonUtils.getBoneByName("mixamorigRightArm", skeleton).rotation.z = 85 * DEG_TO_RAD;
+                    SkeletonUtils.getBoneByName("mixamorigRightArm", skeleton).rotation.x = -5 * DEG_TO_RAD;
 
                     SkeletonUtils.getBoneByName("mixamorigLeftHand", skeleton).rotation.z = -10 * DEG_TO_RAD;
                     SkeletonUtils.getBoneByName("mixamorigRightHand", skeleton).rotation.z = 10 * DEG_TO_RAD;
@@ -142,10 +157,12 @@
 
                     SkeletonUtils.getBoneByName("mixamorigLeftLeg", skeleton).rotation.z = -5 * DEG_TO_RAD;
                     SkeletonUtils.getBoneByName("mixamorigRightLeg", skeleton).rotation.z = 5 * DEG_TO_RAD;
+
+                    // SkeletonUtils.getBoneByName("mixamorigHead", skeleton).rotation.x = 90 * DEG_TO_RAD;
                 }
 
                 const prefix = "mixamorig";
-                const bodyPartSet = [
+                const bodyParts = [
                     "Hips", "Spine", "Spine1", "Spine2", "Neck", "Head",
                     "LeftShoulder", "LeftArm", "LeftForeArm", "LeftHand",
                     "RightShoulder", "RightArm", "RightForeArm", "RightHand",
@@ -157,68 +174,185 @@
                 var delta = 0;
                 function animate(){
                     requestAnimationFrame(animate);
+
                     /**
                      * Compiled code should be inserted here.
                      */
-                    riseLeftArm(200, 5);
-                    riseRightArm(-90, 3);
-                    // dance();
-                    // if(delta > 1){
-                    //     stopDance();
-                    // }
+                    {
+                        riseLeftArmLateral(90, 0, 2);
+                        riseRightArmLateral(90, 0, 2);
+                        riseLeftArm(90, 2, 4);
+                        riseRightArm(90, 2, 4);
+                        rotateHeadLeft(30, 2.5, 3);
+                        rotateHeadRight(45, 1, 2);
+                    }
 
                     delta += clock.getDelta();
 
-
                     renderer.render(scene, camera);
-
                     mixer.update(1/60);
-
-                    // console.log(clock.getDelta());
-
                     stats.update();
 
-                    function riseLeftArm(degree, time){
-                        if(delta <= time){
-                            if(degree <= -60) {
-                                degree = -60;
-                            }
-                            else if(degree >= 180) {
-                                degree = 180;
-                            }
-                            degree *= -1;
-                            leftArm.rotation.x += degree * DEG_TO_RAD / (FPS * time);
-                        }
-                    }
-
-                    function riseRightArm(degree, time){
-                        if(delta <= time){
-                            if(degree <= -60) {
-                                degree = -60;
-                            }
-                            else if(degree >= 180) {
-                                degree = 180;
-                            }
-                            rightArm.rotation.x += degree * DEG_TO_RAD / (FPS * time);
-                        }
-                    }
-
-                    function dance(){
-                        if(!action.isRunning()){
-                            action.play()
-                            console.log("Start play")
-                        }
-                        // mixer.update(clock.getDelta());
-                    }
-
-                    function stopDance() {
-                        if(action.isRunning()) {
-                            action.stop();
-                            // console.log("stop");
-                        }
-                    }
-                    // TODO more functions to add
                 }
+
+                // Left arm rotate about y axis
+                function riseLeftArm(degree, startTime, endTime){
+                        // Decide if this action should take place
+                        if(startTime <= delta && delta <= endTime){
+                            // Make sure the angle is appropriate
+                            if(degree <= ARM_BACK_DEGREE_MAX) {
+                                degree = ARM_BACK_DEGREE_MAX;
+                            }
+                            else if(degree >= ARM_FRONT_DEGREE_MAX) {
+                                degree = ARM_FRONT_DEGREE_MAX;
+                            }
+                            // Calculate the degree for arm to change
+                            degree = degree / (1 + SHOULDER_TO_ARM_RATIO_X);
+
+                            // Counter clockwise, calculate degree change for one frame
+                            degree = - degree / (FPS * (endTime - startTime));
+                            rotateY(SkeletonUtils.getBoneByName(prefix + "LeftArm", skeleton), degree);
+
+                            // Add change to shoulder to make the action more vivid.
+                            SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton).rotateOnWorldAxis(Y, degree * SHOULDER_TO_ARM_RATIO_X * DEG_TO_RAD);
+                            // console.log(- degree * SHOULDER_TO_ARM_RATIO_X * DEG_TO_RAD);
+                        }
+                    }
+
+                // Right arm rotate about y axis
+                function riseRightArm(degree, startTime, endTime){
+                        // Decide if this action should take place
+                        if(startTime <= delta && delta <= endTime){
+                            // Make sure the angle is appropriate
+                            if(degree <= ARM_BACK_DEGREE_MAX) {
+                                degree = ARM_BACK_DEGREE_MAX;
+                            }
+                            else if(degree >= ARM_FRONT_DEGREE_MAX) {
+                                degree = ARM_FRONT_DEGREE_MAX;
+                            }
+                            // Calculate the degree for arm to change
+                            degree = degree / (1 + SHOULDER_TO_ARM_RATIO_X);
+
+                            // Clockwise
+                            degree = degree / (FPS * (endTime - startTime));
+                            rotateY(SkeletonUtils.getBoneByName(prefix + "RightArm", skeleton), degree);
+
+                            // Add change to shoulder to make the action more vivid. Counter clockwise.
+                            SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton).rotateOnWorldAxis(Y, degree * SHOULDER_TO_ARM_RATIO_X * DEG_TO_RAD);
+                        }
+                    }
+
+                // Left arm rotate about z axis
+                function riseLeftArmLateral(degree, startTime, endTime) {
+                    // Decide if this action should take place
+                    if(startTime <= delta && delta <= endTime){
+                        // Make sure the angle is appropriate
+                        if(degree >= ARM_OUT_DEGREE_MAX) {
+                            degree = ARM_OUT_DEGREE_MAX;
+                        }
+                        else if(degree <= ARM_IN_DEGREE_MAX) {
+                            degree = ARM_IN_DEGREE_MAX;
+                        }
+                        // Calculate the degree for arm to change
+                        degree = degree / (1 + SHOULDER_TO_ARM_RATIO_Z);
+
+                        // Clockwise
+                        degree = degree / (FPS * (endTime - startTime));
+                        rotateZ(SkeletonUtils.getBoneByName(prefix + "LeftArm", skeleton), degree);
+
+                        // Add change to shoulder to make the action more vivid.
+                        // rotateZ(SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
+                        SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton).rotateOnWorldAxis(Z, degree * SHOULDER_TO_ARM_RATIO_Z * DEG_TO_RAD);
+                    }
+                }
+
+                // Right arm rotate about z axis
+                function riseRightArmLateral(degree, startTime, endTime) {
+                    // Decide if this action should take place
+                    if(startTime <= delta && delta <= endTime){
+                        // Make sure the angle is appropriate
+                        if(degree >= ARM_OUT_DEGREE_MAX) {
+                            degree = ARM_OUT_DEGREE_MAX;
+                        }
+                        else if(degree <= ARM_IN_DEGREE_MAX) {
+                            degree = ARM_IN_DEGREE_MAX;
+                        }
+                        // Calculate the degree for arm to change
+                        degree = degree / (1 + SHOULDER_TO_ARM_RATIO_Z);
+
+                        // CounterClockwise
+                        degree = - degree / (FPS * (endTime - startTime));
+                        rotateZ(SkeletonUtils.getBoneByName(prefix + "RightArm", skeleton), degree);
+
+                        // Add change to shoulder to make the action more vivid.
+                        // rotateZ(SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
+                        SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton).rotateOnWorldAxis(Z, degree * SHOULDER_TO_ARM_RATIO_Z * DEG_TO_RAD);
+                    }
+                }
+
+                function rotateHeadLeft(degree, startTime, endTime) {
+                    if(startTime <= delta && delta <= endTime) {
+                        if (degree >= HEAD_ROTATION_MAX) {
+                            degree = HEAD_ROTATION_MAX;
+                        }
+                        degree = degree / (FPS * (endTime - startTime));
+                        rotateY(SkeletonUtils.getBoneByName(prefix + "Head", skeleton), degree);
+                    }
+                }
+
+                function rotateHeadRight(degree, startTime, endTime) {
+                    if(startTime <= delta && delta <= endTime) {
+                        if (degree >= HEAD_ROTATION_MAX) {
+                            degree = HEAD_ROTATION_MAX;
+                        }
+                        degree = - degree / (FPS * (endTime - startTime));
+                        rotateY(SkeletonUtils.getBoneByName(prefix + "Head", skeleton), degree);
+                    }
+                }
+                /**
+                 * Let a body part rotate about x axis for a degree
+                 * @param bodyPart - body part to rotate
+                 * @param degree - degree to rotate
+                 */
+                function rotateX(bodyPart, degree){
+                    bodyPart.rotateOnAxis(X, degree * DEG_TO_RAD);
+                }
+
+                /**
+                 * Let a body part rotate about y axis for a degree
+                 * @param bodyPart - body part to rotate
+                 * @param degree - degree to rotate
+                 */
+                function rotateY(bodyPart, degree){
+                    // bodyPart.rotation.y += degree * DEG_TO_RAD;
+                    bodyPart.rotateOnAxis(Y, degree * DEG_TO_RAD);
+                }
+
+                /**
+                 * Let a body part rotate about z axis for a degree
+                 * @param bodyPart - body part to rotate
+                 * @param degree - degree to rotate
+                 */
+                function rotateZ(bodyPart, degree){
+                    // bodyPart.rotation.z += degree * DEG_TO_RAD;
+                    bodyPart.rotateOnAxis(Z, degree * DEG_TO_RAD);
+                }
+
+                function dance(){
+                    if(!action.isRunning()){
+                        action.play()
+                        console.log("Start play")
+                    }
+                    // mixer.update(clock.getDelta());
+        }
+
+                function stopDance() {
+                    if(action.isRunning()) {
+                        action.stop();
+                        // console.log("stop");
+                    }
+                }
+                // TODO more functions to add
             }
         }
 
