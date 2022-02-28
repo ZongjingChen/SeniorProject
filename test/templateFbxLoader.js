@@ -9,7 +9,7 @@ import {SkeletonUtils} from 'https://unpkg.com/three@0.126.1/examples/jsm/utils/
 import Stats from 'https://unpkg.com/three@0.126.1/examples/jsm/libs/stats.module.js';
 let camera, scene, renderer, mixer, stats, human;
 // const animationActions = [];
-const HUMAN_MODEL_PATH = '../res/models/Samba Dancing.fbx';
+const HUMAN_MODEL_PATH = '../res/models/HumanModel.fbx';
 const ROBOT_MODEL_PATH = '../res/models/';
 const clock = new THREE.Clock();
 const loader = new FBXLoader();

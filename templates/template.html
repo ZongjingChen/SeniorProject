@@ -20,7 +20,7 @@
         import Stats from 'https://unpkg.com/three@0.126.1/examples/jsm/libs/stats.module.js';
         let camera, scene, renderer, mixer, stats, human;
         // const animationActions = [];
-        const HUMAN_MODEL_PATH = '../res/models/Samba Dancing.fbx';
+        const HUMAN_MODEL_PATH = '../res/models/HumanModel.fbx';
         const ROBOT_MODEL_PATH = '../res/models/';
         const clock = new THREE.Clock();
         const loader = new FBXLoader();
@@ -34,14 +34,19 @@
 
         // Some limitations of human body
         const SHOULDER_TO_ARM_RATIO_X = 0.5;
+        const SHOULDER_TO_ARM_RATIO_Z = 0;
         const ARM_FRONT_DEGREE_MAX = 180;
         const ARM_BACK_DEGREE_MAX = -60;
-
-        const SHOULDER_TO_ARM_RATIO_Z = 0.5;
         const ARM_OUT_DEGREE_MAX = 180;
         const ARM_IN_DEGREE_MAX = 45;
+        const FOREARM_FRONT_DEGREE_MAX = 135;
 
         const HEAD_ROTATION_MAX = 90;
+        const HEAD_RISE_MAX = 80;
+        const HEAD_RISE_MIN = -45;
+
+        const LEG_FRONT_DEGREE_MAX = 100;
+        const LEG_BACK_DEGREE_MAX = -45;
 
 
         init();
@@ -57,16 +62,16 @@
             const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
             hemiLight.position.set( 0, 200, 0 );
             scene.add( hemiLight );
-            // ground
-            const mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
-            mesh.rotation.x = - Math.PI / 2;
-            mesh.receiveShadow = true;
-            scene.add( mesh );
-            // grid
-            const grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
-            grid.material.opacity = 0.2;
-            grid.material.transparent = true;
-            scene.add( grid );
+            // // ground
+            // const mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+            // mesh.rotation.x = - Math.PI / 2;
+            // mesh.receiveShadow = true;
+            // scene.add( mesh );
+            // // grid
+            // const grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
+            // grid.material.opacity = 0.2;
+            // grid.material.transparent = true;
+            // scene.add( grid );
             // renderer
             renderer = new THREE.WebGLRenderer( { antialias: true } );
             renderer.setPixelRatio( window.devicePixelRatio );
@@ -142,8 +147,6 @@
                 {
                     SkeletonUtils.getBoneByName("mixamorigLeftArm", skeleton).rotation.x = -5 * DEG_TO_RAD;
                     SkeletonUtils.getBoneByName("mixamorigLeftArm", skeleton).rotation.z = -85 * DEG_TO_RAD;
-
-
                     SkeletonUtils.getBoneByName("mixamorigRightArm", skeleton).rotation.z = 85 * DEG_TO_RAD;
                     SkeletonUtils.getBoneByName("mixamorigRightArm", skeleton).rotation.x = -5 * DEG_TO_RAD;
 
@@ -152,7 +155,7 @@
 
                     SkeletonUtils.getBoneByName("mixamorigLeftHandThumb1", skeleton).rotation.z = 25 * DEG_TO_RAD;
                     SkeletonUtils.getBoneByName("mixamorigRightHandThumb1", skeleton).rotation.z = -25 * DEG_TO_RAD;
-                    SkeletonUtils.getBoneByName("mixamorigRightHandThumb1", skeleton).rotation.x = -10 * DEG_TO_RAD;
+                    SkeletonUtils.getBoneByName("mixamorigLeftHandThumb1", skeleton).rotation.x = -10 * DEG_TO_RAD;
                     SkeletonUtils.getBoneByName("mixamorigRightHandThumb1", skeleton).rotation.x = -10 * DEG_TO_RAD;
 
                     SkeletonUtils.getBoneByName("mixamorigLeftLeg", skeleton).rotation.z = -5 * DEG_TO_RAD;
@@ -179,12 +182,18 @@
                      * Compiled code should be inserted here.
                      */
                     {
-                        riseLeftArmLateral(90, 0, 2);
-                        riseRightArmLateral(90, 0, 2);
-                        riseLeftArm(90, 2, 4);
-                        riseRightArm(90, 2, 4);
-                        rotateHeadLeft(30, 2.5, 3);
-                        rotateHeadRight(45, 1, 2);
+                        riseLeftForeArm(45, 0, 2);
+                        riseRightForeArm(45, 0, 2);
+                        // riseHead(-99, 0, 2);
+                        // riseLeftArmLateral(90, 0, 2);
+                        // riseRightArmLateral(90, 0, 2);
+                        // riseLeftArm(90, 0, 2);
+                        // riseRightArm(90, 2, 4);
+                        // rotateHeadLeft(30, 2.5, 3);
+                        // rotateHeadRight(45, 1, 2);
+                        //
+                        // riseLeftLeg(45, 0, 2);
+                        // riseRightLeg(45, 0, 2);
                     }
 
                     delta += clock.getDelta();
@@ -195,7 +204,7 @@
 
                 }
 
-                // Left arm rotate about y axis
+                // Left arm rotate about its local y axis
                 function riseLeftArm(degree, startTime, endTime){
                         // Decide if this action should take place
                         if(startTime <= delta && delta <= endTime){
@@ -211,15 +220,15 @@
 
                             // Counter clockwise, calculate degree change for one frame
                             degree = - degree / (FPS * (endTime - startTime));
-                            rotateY(SkeletonUtils.getBoneByName(prefix + "LeftArm", skeleton), degree);
+                            rotateLocalY(SkeletonUtils.getBoneByName(prefix + "LeftArm", skeleton), degree);
 
                             // Add change to shoulder to make the action more vivid.
-                            SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton).rotateOnWorldAxis(Y, degree * SHOULDER_TO_ARM_RATIO_X * DEG_TO_RAD);
+                            rotateWorldX(SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_X);
                             // console.log(- degree * SHOULDER_TO_ARM_RATIO_X * DEG_TO_RAD);
                         }
                     }
 
-                // Right arm rotate about y axis
+                // Right arm rotate about its local y axis
                 function riseRightArm(degree, startTime, endTime){
                         // Decide if this action should take place
                         if(startTime <= delta && delta <= endTime){
@@ -235,14 +244,14 @@
 
                             // Clockwise
                             degree = degree / (FPS * (endTime - startTime));
-                            rotateY(SkeletonUtils.getBoneByName(prefix + "RightArm", skeleton), degree);
+                            rotateLocalY(SkeletonUtils.getBoneByName(prefix + "RightArm", skeleton), degree);
 
                             // Add change to shoulder to make the action more vivid. Counter clockwise.
-                            SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton).rotateOnWorldAxis(Y, degree * SHOULDER_TO_ARM_RATIO_X * DEG_TO_RAD);
+                            rotateWorldX(SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton), - degree * SHOULDER_TO_ARM_RATIO_X);
                         }
                     }
 
-                // Left arm rotate about z axis
+                // Left arm rotate about its local z axis
                 function riseLeftArmLateral(degree, startTime, endTime) {
                     // Decide if this action should take place
                     if(startTime <= delta && delta <= endTime){
@@ -258,15 +267,15 @@
 
                         // Clockwise
                         degree = degree / (FPS * (endTime - startTime));
-                        rotateZ(SkeletonUtils.getBoneByName(prefix + "LeftArm", skeleton), degree);
+                        rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "LeftArm", skeleton), degree);
 
                         // Add change to shoulder to make the action more vivid.
-                        // rotateZ(SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
-                        SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton).rotateOnWorldAxis(Z, degree * SHOULDER_TO_ARM_RATIO_Z * DEG_TO_RAD);
+                        // rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
+                        rotateWorldZ(SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
                     }
                 }
 
-                // Right arm rotate about z axis
+                // Right arm rotate about its local z axis
                 function riseRightArmLateral(degree, startTime, endTime) {
                     // Decide if this action should take place
                     if(startTime <= delta && delta <= endTime){
@@ -282,60 +291,165 @@
 
                         // CounterClockwise
                         degree = - degree / (FPS * (endTime - startTime));
-                        rotateZ(SkeletonUtils.getBoneByName(prefix + "RightArm", skeleton), degree);
+                        rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "RightArm", skeleton), degree);
 
                         // Add change to shoulder to make the action more vivid.
-                        // rotateZ(SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
-                        SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton).rotateOnWorldAxis(Z, degree * SHOULDER_TO_ARM_RATIO_Z * DEG_TO_RAD);
+                        // rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
+                        rotateWorldZ(SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
                     }
                 }
 
+                // Left forearm rotate about its local y axis
+                function riseLeftForeArm(degree, startTime, endTime) {
+                    if(startTime <= delta && delta <= endTime){
+                        // Make sure the angle is appropriate
+                        if(degree >= FOREARM_FRONT_DEGREE_MAX) {
+                            degree = FOREARM_FRONT_DEGREE_MAX;
+                        }
+                        else if(degree < 0) {
+                            degree = 0;
+                        }
+                        // Counter clockwise, calculate degree change for one frame
+                        degree = - degree / (FPS * (endTime - startTime));
+                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "LeftForeArm", skeleton), degree);
+                    }
+                }
+
+                // Right forearm rotate about its local y axis
+                function riseRightForeArm(degree, startTime, endTime) {
+                    if(startTime <= delta && delta <= endTime){
+                        // Make sure the angle is appropriate
+                        if(degree >= FOREARM_FRONT_DEGREE_MAX) {
+                            degree = FOREARM_FRONT_DEGREE_MAX;
+                        }
+                        else if(degree < 0) {
+                            degree = 0;
+                        }
+                        // Counter clockwise, calculate degree change for one frame
+                        degree = degree / (FPS * (endTime - startTime));
+                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "RightForeArm", skeleton), degree);
+                    }
+                }
+
+                // Rotate head left
                 function rotateHeadLeft(degree, startTime, endTime) {
-                    if(startTime <= delta && delta <= endTime) {
+                    if (startTime <= delta && delta <= endTime) {
                         if (degree >= HEAD_ROTATION_MAX) {
                             degree = HEAD_ROTATION_MAX;
                         }
                         degree = degree / (FPS * (endTime - startTime));
-                        rotateY(SkeletonUtils.getBoneByName(prefix + "Head", skeleton), degree);
+                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "Head", skeleton), degree);
                     }
                 }
 
+                // Rotate head right
                 function rotateHeadRight(degree, startTime, endTime) {
-                    if(startTime <= delta && delta <= endTime) {
+                    if (startTime <= delta && delta <= endTime) {
                         if (degree >= HEAD_ROTATION_MAX) {
                             degree = HEAD_ROTATION_MAX;
                         }
-                        degree = - degree / (FPS * (endTime - startTime));
-                        rotateY(SkeletonUtils.getBoneByName(prefix + "Head", skeleton), degree);
+                        degree = -degree / (FPS * (endTime - startTime));
+                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "Head", skeleton), degree);
                     }
                 }
+
+                // Rise head
+                function riseHead(degree, startTime, endTime) {
+                    if (startTime <= delta && delta <= endTime) {
+                        if (degree >= HEAD_RISE_MAX) {
+                            degree = HEAD_RISE_MAX;
+                        } else if (degree <= HEAD_RISE_MIN) {
+                            degree = HEAD_RISE_MIN;
+                        }
+                        degree = -degree / (FPS * (endTime - startTime));
+                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "Head", skeleton), degree);
+                    }
+                }
+
+                // left leg rotate about x axis
+                function riseLeftLeg(degree, startTime, endTime) {
+                    if(startTime <= delta && delta <= endTime) {
+                        if (degree <= LEG_BACK_DEGREE_MAX) {
+                            degree = LEG_BACK_DEGREE_MAX;
+                        }
+                        else if(degree >= LEG_FRONT_DEGREE_MAX) {
+                            degree = LEG_FRONT_DEGREE_MAX;
+                        }
+                        // Counter clockwise
+                        degree = - degree / (FPS * (endTime - startTime));
+                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "LeftUpLeg", skeleton), degree);
+                    }
+                }
+
+                // right leg rotate about x axis
+                function riseRightLeg(degree, startTime, endTime) {
+                    if(startTime <= delta && delta <= endTime) {
+                        if (degree <= LEG_BACK_DEGREE_MAX) {
+                            degree = LEG_BACK_DEGREE_MAX;
+                        }
+                        else if(degree >= LEG_FRONT_DEGREE_MAX) {
+                            degree = LEG_FRONT_DEGREE_MAX;
+                        }
+                        // Counter clockwise
+                        degree = - degree / (FPS * (endTime - startTime));
+                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "RightUpLeg", skeleton), degree);
+                    }
+                }
+
                 /**
-                 * Let a body part rotate about x axis for a degree
+                 * Let a body part rotate about its local x axis for a degree
                  * @param bodyPart - body part to rotate
                  * @param degree - degree to rotate
                  */
-                function rotateX(bodyPart, degree){
+                function rotateLocalX(bodyPart, degree){
                     bodyPart.rotateOnAxis(X, degree * DEG_TO_RAD);
                 }
 
                 /**
-                 * Let a body part rotate about y axis for a degree
+                 * Let a body part rotate about its local y axis for a degree
                  * @param bodyPart - body part to rotate
                  * @param degree - degree to rotate
                  */
-                function rotateY(bodyPart, degree){
+                function rotateLocalY(bodyPart, degree){
                     // bodyPart.rotation.y += degree * DEG_TO_RAD;
                     bodyPart.rotateOnAxis(Y, degree * DEG_TO_RAD);
                 }
 
                 /**
-                 * Let a body part rotate about z axis for a degree
+                 * Let a body part rotate about its local z axis for a degree
                  * @param bodyPart - body part to rotate
                  * @param degree - degree to rotate
                  */
-                function rotateZ(bodyPart, degree){
+                function rotateLocalZ(bodyPart, degree){
                     // bodyPart.rotation.z += degree * DEG_TO_RAD;
                     bodyPart.rotateOnAxis(Z, degree * DEG_TO_RAD);
+                }
+
+                /**
+                 * Let a body part rotate about world x axis for a degree
+                 * @param bodyPart - body part to rotate
+                 * @param degree - degree to rotate
+                 */
+                function rotateWorldX(bodyPart, degree){
+                    bodyPart.rotateOnWorldAxis(X, degree * DEG_TO_RAD);
+                }
+
+                /**
+                 * Let a body part rotate about world y axis for a degree
+                 * @param bodyPart - body part to rotate
+                 * @param degree - degree to rotate
+                 */
+                function rotateWorldY(bodyPart, degree){
+                    bodyPart.rotateOnWorldAxis(Y, degree * DEG_TO_RAD);
+                }
+
+                /**
+                 * Let a body part rotate about world z axis for a degree
+                 * @param bodyPart - body part to rotate
+                 * @param degree - degree to rotate
+                 */
+                function rotateWorldZ(bodyPart, degree){
+                    bodyPart.rotateOnWorldAxis(Z, degree * DEG_TO_RAD);
                 }
 
                 function dance(){
