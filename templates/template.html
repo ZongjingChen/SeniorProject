@@ -184,7 +184,12 @@
                      * Compiled code should be inserted here.
                      */
                     {
-
+                        rotateLeftFoot(30, 0, 2);
+                        rotateRightFoot(-30, 0, 2);
+                        // riseLeftForeArm(45, 0, 2);
+                        // riseRightForeArm(45, 0, 2);
+                        // rotateLeftHand(30, 0, 2);
+                        // rotateRightHand(30, 0, 2);
                         // riseLeftLeg(45, 0, 2);
                         // riseRightLeg(45, 0, 2);
                         // riseLeftLeg(-45, 2, 4);
@@ -296,6 +301,24 @@
                     }
                 }
 
+                // Rotate left hand about local x axis, positive degree indicates right rotate
+                function rotateLeftHand(degree, startTime, endTime) {
+                    if(startTime <= delta && delta <= endTime){
+                        // Counter clockwise, calculate degree change for one frame
+                        degree = degree / (FPS * (endTime - startTime));
+                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "LeftHand", skeleton), degree);
+                    }
+                }
+
+                // Rotate right hand about local x axis, positive degree indicates left rotate
+                function rotateRightHand(degree, startTime, endTime) {
+                    if(startTime <= delta && delta <= endTime){
+                        // Counter clockwise, calculate degree change for one frame
+                        degree = degree / (FPS * (endTime - startTime));
+                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "RightHand", skeleton), degree);
+                    }
+                }
+
                 // Rotate head, a positive degree will rotate head left
                 function rotateHead(degree, startTime, endTime) {
                     if (startTime <= delta && delta <= endTime) {
@@ -345,6 +368,24 @@
                         // Counter clockwise
                         degree = degree / (FPS * (endTime - startTime));
                         rotateLocalX(SkeletonUtils.getBoneByName(prefix + "RightLeg", skeleton), degree);
+                    }
+                }
+
+                // Rotate left foot about local y axis, positive degree indicates left rotate
+                function rotateLeftFoot(degree, startTime, endTime) {
+                    if(startTime <= delta && delta <= endTime){
+                        // Counter clockwise, calculate degree change for one frame
+                        degree = degree / (FPS * (endTime - startTime));
+                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "LeftFoot", skeleton), degree);
+                    }
+                }
+
+                // Rotate right foot about local y axis, positive degree indicates left rotate
+                function rotateRightFoot(degree, startTime, endTime) {
+                    if(startTime <= delta && delta <= endTime){
+                        // Counter clockwise, calculate degree change for one frame
+                        degree = degree / (FPS * (endTime - startTime));
+                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "RightFoot", skeleton), degree);
                     }
                 }
 
