@@ -18,10 +18,10 @@
         import {FBXLoader} from 'https://unpkg.com/three@0.126.1/examples/jsm/loaders/FBXLoader.js';
         import {SkeletonUtils} from 'https://unpkg.com/three@0.126.1/examples/jsm/utils/SkeletonUtils.js'
         import Stats from 'https://unpkg.com/three@0.126.1/examples/jsm/libs/stats.module.js';
-        let camera, scene, renderer, mixer, stats, human;
+        let camera, scene, renderer, mixer, stats, human, robot;
         // const animationActions = [];
         const HUMAN_MODEL_PATH = '../res/models/HumanModel.fbx';
-        const ROBOT_MODEL_PATH = '../res/models/';
+        const ROBOT_MODEL_PATH = '../res/models/RobotModel.fbx';
         const clock = new THREE.Clock();
         const loader = new FBXLoader();
         const DEG_TO_RAD = Math.PI / 180;
@@ -94,7 +94,7 @@
             stats = new Stats();
             container.appendChild( stats.dom );
 
-            loader.load( HUMAN_MODEL_PATH, function ( object ) {
+            loader.load( ROBOT_MODEL_PATH, function ( object ) {
                 mixer = new THREE.AnimationMixer(object);
                 // load object and add to scene
                 // const model = mixer.clipAction(object.animations[0]);
@@ -109,30 +109,17 @@
                 // animationAction.reset();
                 // animationAction.play();
                 scene.add(object);
-                human = new Human(object);
-                human.playAnimation(object);
+                robot = new Robot(object);
+                robot.playAnimation();
             })
         }
 
-        class Human {
+        class Robot {
             constructor(object){
-                // this.loader = loader;
-                // this.clock = clock;
-                // this.scene = scene;
-                // this.camera = camera;
-                // this.renderer = renderer;
                 this.object = object;
-                // this.skeletonHelper = new THREE.SkeletonHelper(object.children[2]);
-                // this.skeleton = object.children[2].skeleton;
-                // this.leftArm = SkeletonUtils.getBoneByName("mixamorigLeftArm", this.skeleton);
-                // this.rightArm = SkeletonUtils.getBoneByName("mixamorigRightArm", this.skeleton);
             }
 
             playAnimation() {
-                /**
-                 *  Body parts
-                 */
-                // TODO: Add all body parts
                 const skeleton = this.object.children[2].skeleton;
                 const action = mixer.clipAction(this.object.animations[0]);
                 console.log(action);
@@ -184,14 +171,23 @@
                      * Compiled code should be inserted here.
                      */
                     {
-                        rotateLeftFoot(30, 0, 2);
-                        rotateRightFoot(-30, 0, 2);
+                        // dance bug
+                        // {
+                        //     rotateHead(45, 0, 2);
+                        //     riseLeftLeg(45, 0, 2);
+                        //     dance(1, 2, 4);
+                        //     riseRightLeg(45, 4, 6);
+                        //     dance(1, 4, 6);
+                        // }
+
+                        // rotateHead(60, 0, 3);
+                        // rotateLeftFoot(30, 0, 2);
+                        // rotateRightFoot(-30, 0, 2);
                         // riseLeftForeArm(45, 0, 2);
                         // riseRightForeArm(45, 0, 2);
                         // rotateLeftHand(30, 0, 2);
                         // rotateRightHand(30, 0, 2);
-                        // riseLeftLeg(45, 0, 2);
-                        // riseRightLeg(45, 0, 2);
+
                         // riseLeftLeg(-45, 2, 4);
                         // riseRightLeg(-45, 2, 4);
                         // riseLeftForeArm(45, 0, 2);
@@ -335,6 +331,14 @@
                     }
                 }
 
+                // Spine rotate about x axis
+                function bow(degree, startTime, endTime) {
+                    if (startTime <= delta && delta <= endTime) {
+                        degree = degree / (FPS * (endTime - startTime));
+                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "Spine", skeleton), degree);
+                    }
+                }
+
                 // Left up leg rotate about x axis
                 function riseLeftUpLeg(degree, startTime, endTime) {
                     if(startTime <= delta && delta <= endTime) {
@@ -386,6 +390,25 @@
                         // Counter clockwise, calculate degree change for one frame
                         degree = degree / (FPS * (endTime - startTime));
                         rotateLocalY(SkeletonUtils.getBoneByName(prefix + "RightFoot", skeleton), degree);
+                    }
+                }
+
+                // Begin dance. Pause when finished
+                function dance(speed, startTime, endTime){
+                    // FIXME: when more than one dance is called, the animation cannot play
+                    if (startTime <= delta && delta <= endTime) {
+                        if(!action.isRunning()){
+                            action.timeScale = speed;
+                            action.play();
+                            action.fadeIn(0.4);
+                            console.log("Start play")
+                        }
+                    }
+                    else {
+                        if(action.isRunning()) {
+                            // action.fadeOut(1);
+                            action.paused = true;
+                        }
                     }
                 }
 
@@ -444,26 +467,10 @@
                 function rotateWorldZ(bodyPart, degree){
                     bodyPart.rotateOnWorldAxis(Z, degree * DEG_TO_RAD);
                 }
-
-                function dance(){
-                    if(!action.isRunning()){
-                        action.play()
-                        console.log("Start play")
-                    }
-                    // mixer.update(clock.getDelta());
-        }
-
-                function stopDance() {
-                    if(action.isRunning()) {
-                        action.stop();
-                        // console.log("stop");
-                    }
-                }
-                // TODO more functions to add
             }
         }
 
-        class Robot{
+        class Human{
             // TODO finish Robot Class
         }
     </script>
