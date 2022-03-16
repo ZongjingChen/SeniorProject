@@ -28,9 +28,7 @@ Head, Body
 
 ## Syntax Rules
 ```
-Program -> DeclSequence BEGIN StatementSequence END
-
-DeclSequence -> ModelDecl ; FunctionDeclSequence
+Program -> ModelDecl ; FunctionDeclSequence BEGIN StatementSequence END
 
 ModelDecl -> MODEL = RobotType
 RobotType -> XBOT | YBOT
@@ -38,17 +36,13 @@ RobotType -> XBOT | YBOT
 FunctionDeclSequence -> FunctionDecl FunctionDeclSequence
 FunctionDeclSequence ->
 
-FunctionDecl -> FunctionSignature FunctionBody
-
-FunctionSignature -> function ident ( IdentList )
+FunctionDecl -> function ident ( IdentList ) { StatementSequence } 
 
 IdentList -> ident IdentListRest
 IdentList -> 
 
 IdentListRest -> , ident IdentListRest
-IdentListRest -> 
-
-FunctionBody -> { StatementSequence } 
+IdentListRest ->  
 
 StatementSequence -> Statement StatementSequenceRest
 StatementSequenceRest -> ; Statement StatementSequenceRest

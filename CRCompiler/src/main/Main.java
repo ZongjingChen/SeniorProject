@@ -1,6 +1,5 @@
 package main;
 
-import main.DecompiledDeCLanModel.SourceImpl;
 import main.DecompiledDeCLanModel.TokenFactoryImpl;
 import main.common.*;
 
@@ -36,7 +35,7 @@ public class Main {
             System.exit(1);
         }
 
-        source = new SourceImpl(reader);
+        source = new ReaderSource(reader);
         tokenFactory = new TokenFactoryImpl();
         lexer = new CRLexer(source, tokenFactory);
     }
