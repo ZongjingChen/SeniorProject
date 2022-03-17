@@ -15,4 +15,10 @@ public class ModelDeclaration extends AbstractASTNode{
         return model;
     }
 
+    @Override
+    public String toString() {
+        return "ModelDeclaration{\n" +
+                "\tmodel=" + model +
+                "\n}";
+    }
 }

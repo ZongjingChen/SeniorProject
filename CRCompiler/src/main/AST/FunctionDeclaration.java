@@ -1,7 +1,6 @@
 package main.AST;
 
 import main.common.Position;
-import main.common.Token;
 
 import java.util.List;
 
@@ -27,5 +26,14 @@ public class FunctionDeclaration extends AbstractASTNode{
 
     public List<Statement> getStatements() {
         return statements;
+    }
+
+    @Override
+    public String toString() {
+        return "FunctionDeclaration{\n" +
+                "\tname=" + name +
+                "\tparamList=" + paramList +
+                "\tstatements=" + statements +
+                "\n";
     }
 }

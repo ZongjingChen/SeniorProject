@@ -23,29 +23,44 @@ public enum TokenType {
     SEMI, // semicolon ";"
     COMMA, // comma ","
     PERIOD, // period "."
-    FUNC, // "function"
-    SIM, // "sim"
-    SEQ, // "seq"
-    LA, // "LeftArm"
-    RA, // "RightArm"
-    LFA, // "LeftForeArm"
-    RFA, // "RightForeArm"
-    LH, // "LeftHand"
-    RH, // "RightHand"
-    LL, // "LeftLeg"
-    RL, // "RightLeg"
-    LUL, // "LeftUpLeg"
-    RUL, // "RightUpLeg"
-    LF, // "LeftFoot"
-    RF, // "RightFoot"
-    HEAD, // "Head"
-    BODY, // " Body"
-    EQ, // "equals"
     // the rest are reserved words whose lexeme matches their name
-    BEGIN, MODEL, XBOT, YBOT, END, TIME;
+    BEGIN, MODEL, XBOT, YBOT, END, TIME, sim,
+    seq,
+    LArm,
+    RArm,
+    LForeArm,
+    RForeArm,
+    LHand,
+    RHand,
+    LLeg,
+    RLeg,
+    LUpLeg,
+    RUpLeg,
+    LFoot,
+    RFoot,
+    HEAD,
+    BODY,
+    EQ,
+    function;
 
     public static final Map<String, TokenType> reserved;
 
+    public static final TokenType[] bodyParts = new TokenType[]{
+            LArm,
+            RArm,
+            LForeArm,
+            RForeArm,
+            LHand,
+            RHand,
+            LLeg,
+            RLeg,
+            LUpLeg,
+            RUpLeg,
+            LFoot,
+            RFoot,
+            HEAD,
+            BODY
+    };
 
     private static void addReserved(TokenType type) {
         reserved.put(type.toString(), type);
@@ -59,5 +74,23 @@ public enum TokenType {
         addReserved(YBOT);
         addReserved(END);
         addReserved(TIME);
+        addReserved(sim);
+        addReserved(seq);
+        addReserved(LArm);
+        addReserved(RArm);
+        addReserved(LForeArm);
+        addReserved(RForeArm);
+        addReserved(LHand);
+        addReserved(RHand);
+        addReserved(LLeg);
+        addReserved(RLeg);
+        addReserved(LUpLeg);
+        addReserved(RUpLeg);
+        addReserved(LFoot);
+        addReserved(RFoot);
+        addReserved(HEAD);
+        addReserved(BODY);
+        addReserved(EQ);
+        addReserved(function);
     }
 }

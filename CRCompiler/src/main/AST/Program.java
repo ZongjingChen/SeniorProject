@@ -1,7 +1,6 @@
 package main.AST;
 
 import main.common.Position;
-import main.common.TokenType;
 
 import java.util.List;
 
@@ -27,5 +26,14 @@ public class Program extends AbstractASTNode {
 
     public List<Statement> getStatements() {
         return statements;
+    }
+
+    @Override
+    public String toString() {
+        return "Program{\n" +
+                "\tmodelDecl=" + modelDecl +
+                "\tfuncDecls=" + funcDecls +
+                "\tstatements=" + statements +
+                "\n}";
     }
 }

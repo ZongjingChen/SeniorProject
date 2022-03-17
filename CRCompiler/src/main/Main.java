@@ -1,6 +1,6 @@
 package main;
 
-import main.DecompiledDeCLanModel.TokenFactoryImpl;
+import main.AST.Program;
 import main.common.*;
 
 import java.io.BufferedReader;
@@ -9,17 +9,38 @@ import java.io.FileReader;
 import java.io.Reader;
 
 public class Main {
-    private static String fileName;
     private static Source source;
-    private static TokenFactory tokenFactory;
     private static CRLexer lexer;
+    private static CRParser parser;
+    private static ErrorLog errorLog = new ErrorLog();
 
     public static void main(String[] args) {
-        testLexer();
+//        testLexer();
+        testParser();
+    }
+
+    private static void testParser() {
+        initParser("test/testParser.cr");
+        try {
+            Program program = parser.parseProgram();
+            System.out.println(program);
+        }
+        catch (ParseException pe) {
+            System.err.println(pe.getMessage());
+        }
+
+        for (ErrorLog.LogItem item : errorLog) {
+            System.err.println(item);
+        }
+    }
+
+    private static void initParser(String fileName) {
+        initLexer(fileName);
+        parser = new CRParser(lexer, errorLog);
     }
 
     public static void testLexer(){
-        initLexer("test/test.cr");
+        initLexer("test/testLexer.cr");
         while(lexer.hasNext()) {
             Token token = lexer.next();
             System.out.println(token);
@@ -36,7 +57,7 @@ public class Main {
         }
 
         source = new ReaderSource(reader);
-        tokenFactory = new TokenFactoryImpl();
-        lexer = new CRLexer(source, tokenFactory);
+//        ErrorLog errorLog = new ErrorLog();
+        lexer = new CRLexer(source, errorLog);
     }
 }

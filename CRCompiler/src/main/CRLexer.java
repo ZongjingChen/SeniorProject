@@ -6,12 +6,12 @@ import java.util.NoSuchElementException;
 
 public class CRLexer implements Lexer {
     private Source source;
-    private TokenFactory tokenFactory;
+    private ErrorLog errorLog;
     private Token nextToken;
 
-    public CRLexer(Source source, TokenFactory tokenFactory) {
+    public CRLexer(Source source, ErrorLog errorLog) {
         this.source = source;
-        this.tokenFactory = tokenFactory;
+        this.errorLog = errorLog;
         this.nextToken = null;
     }
 
@@ -95,67 +95,67 @@ public class CRLexer implements Lexer {
                     else if(c == '{') {
                         position = source.getPosition();
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.LCB, position);
+                        nextToken = Token.create(TokenType.LCB, position);
                         return;
                     }
                     else if(c == '}') {
                         position = source.getPosition();
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.RCB, position);
+                        nextToken = Token.create(TokenType.RCB, position);
                         return;
                     }
                     else if(c == '=') {
                         position = source.getPosition();
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.ASSIGN, position);
+                        nextToken = Token.create(TokenType.ASSIGN, position);
                         return;
                     }
                     else if(c == ';') {
                         position = source.getPosition();
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.SEMI, position);
+                        nextToken = Token.create(TokenType.SEMI, position);
                         return;
                     }
                     else if(c == '+') {
                         position = source.getPosition();
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.PLUS, position);
+                        nextToken = Token.create(TokenType.PLUS, position);
                         return;
                     }
                     else if(c == '-') {
                         position = source.getPosition();
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.MINUS, position);
+                        nextToken = Token.create(TokenType.MINUS, position);
                         return;
                     }
                     else if(c == '*') {
                         position = source.getPosition();
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.TIMES, position);
+                        nextToken = Token.create(TokenType.TIMES, position);
                         return;
                     }
                     else if(c == '(') {
                         position = source.getPosition();
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.LPAR, position);
+                        nextToken = Token.create(TokenType.LPAR, position);
                         return;
                     }
                     else if(c == ')') {
                         position = source.getPosition();
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.RPAR, position);
+                        nextToken = Token.create(TokenType.RPAR, position);
                         return;
                     }
                     else if(c == '.') {
                         position = source.getPosition();
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.PERIOD, position);
+                        nextToken = Token.create(TokenType.PERIOD, position);
                         return;
                     }
                     else if(c == ',') {
                         position = source.getPosition();
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.COMMA, position);
+                        nextToken = Token.create(TokenType.COMMA, position);
                         return;
                     }
                     else {
@@ -171,7 +171,7 @@ public class CRLexer implements Lexer {
                         break;
                     }
                     else {
-                        nextToken = tokenFactory.makeToken(TokenType.DIVIDE, position);
+                        nextToken = Token.create(TokenType.DIVIDE, position);
                         return;
                     }
                 case COMMENT:
@@ -189,7 +189,7 @@ public class CRLexer implements Lexer {
                         break;
                     }
                     else {
-                        nextToken = tokenFactory.makeIdToken(lexeme.toString(), position);
+                        nextToken = Token.createId(lexeme.toString(), position);
                         return;
                     }
                 case NUMBER:
@@ -199,25 +199,25 @@ public class CRLexer implements Lexer {
                         break;
                     }
                     else {
-                        nextToken = tokenFactory.makeNumToken(lexeme.toString(), position);
+                        nextToken = Token.createNum(lexeme.toString(), position);
                         return;
                     }
                 case GT:
                     if(c == '=') {
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.GE, position);
+                        nextToken = Token.create(TokenType.GE, position);
                     }
                     else {
-                        nextToken = tokenFactory.makeToken(TokenType.GT, position);
+                        nextToken = Token.create(TokenType.GT, position);
                     }
                     return;
                 case LT:
                     if(c == '=') {
                         source.advance();
-                        nextToken = tokenFactory.makeToken(TokenType.LE, position);
+                        nextToken = Token.create(TokenType.LE, position);
                     }
                     else {
-                        nextToken = tokenFactory.makeToken(TokenType.LT, position);
+                        nextToken = Token.create(TokenType.LT, position);
                     }
                     return;
             }
@@ -230,19 +230,19 @@ public class CRLexer implements Lexer {
                 nextToken = null;
                 return;
             case IDENT:
-                nextToken = tokenFactory.makeIdToken(lexeme.toString(), position);
+                nextToken = Token.createId(lexeme.toString(), position);
                 return;
             case GT:
-                nextToken = tokenFactory.makeToken(TokenType.GT, position);
+                nextToken = Token.create(TokenType.GT, position);
                 return;
             case LT:
-                nextToken = tokenFactory.makeToken(TokenType.LT, position);
+                nextToken = Token.create(TokenType.LT, position);
                 return;
             case DIV:
-                nextToken = tokenFactory.makeToken(TokenType.DIVIDE, position);
+                nextToken = Token.create(TokenType.DIVIDE, position);
                 return;
             case NUMBER:
-                nextToken = tokenFactory.makeNumToken(lexeme.toString(), position);
+                nextToken = Token.createNum(lexeme.toString(), position);
         }
     }
 }

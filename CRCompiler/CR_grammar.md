@@ -48,22 +48,21 @@ StatementSequence -> Statement StatementSequenceRest
 StatementSequenceRest -> ; Statement StatementSequenceRest
 StatementSequenceRest -> 
 
-Statement -> Assignment | FunctionCall | NumDecl
+Statement -> Assignment | FunctionCall | PrimitiveFunctionCall |
              SimBlock | SeqBlock
 [comment]: <> (IfStatement | WhileStatement | ForStatement |)
 Statement -> 
 
 Assignment -> ident = Expression
 
-FunctionCall -> BodyPart . BuiltInFunctionCall
 FunctionCall -> ident ActualParameters
 
-BuiltInFunctionCall -> BuiltInFunctionName ActualParameters
-BuiltInFunctionName -> raise | lateralRaise | rotate 
+PrimitiveFunctionCall -> BodyPart . BuiltInFunctionName ActualParameters
+PrimitiveFunctionName -> raise | lateralRaise | rotate 
 
-BodyPart -> LeftArm | RightArm | LeftForeArm | RightForeArm | LeftHand | RightHand |
-            LeftLeg | RightLeg | LeftUpperLeg | RightUpperLeg | LeftFoot | RightFoot |
-            Head | Body | MODEL
+BodyPart -> LArm | RArm | LForeArm | RForeArm | LHand | RHand |
+            LLeg | RLeg | LUpLeg | RUpLeg | LFoot | RFoot |
+            HEAD | BODY | MODEL
 
 ActualParameters -> ( ExpList )
 ActualParameters -> ( )

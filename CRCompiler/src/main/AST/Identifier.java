@@ -12,4 +12,11 @@ public class Identifier extends AbstractASTNode {
     public String getLexeme() {
         return lexeme;
     }
+
+    @Override
+    public String toString() {
+        return "Identifier{" +
+                "lexeme='" + lexeme + '\'' +
+                '}';
+    }
 }
