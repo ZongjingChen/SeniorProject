@@ -19,4 +19,9 @@ public class Assignment extends AbstractASTNode implements Statement {
     public Identifier getIdent() {
         return ident;
     }
+
+    @Override
+    public String toString() {
+        return ident + " = " + expression;
+    }
 }

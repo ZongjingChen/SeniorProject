@@ -10,6 +10,6 @@ public class EmptyStatement extends AbstractASTNode implements Statement {
 
     @Override
     public String toString() {
-        return "EmptyStatement{}";
+        return "";
     }
 }

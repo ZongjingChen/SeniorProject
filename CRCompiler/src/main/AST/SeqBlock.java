@@ -15,4 +15,11 @@ public class SeqBlock extends AbstractASTNode implements Statement{
     public List<Statement> getStatements() {
         return statements;
     }
+
+    @Override
+    public String toString() {
+        return "SeqBlock{" +
+                "statements=" + statements +
+                '}';
+    }
 }

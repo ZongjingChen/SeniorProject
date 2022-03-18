@@ -20,10 +20,10 @@ MODEL, XBOT, YBOT, BEGIN, END, TIME
 if, else, elif, while, for, and, or, mod, not,
 function, sim, seq
 
-LeftArm, RightArm, LeftForeArm, RightForeArm, LeftHand, RightHand
-LeftLeg, RightLeg, LeftUpperLeg, RightUpperLeg, LeftFoot, RightFoot,
-Head, Body
-
+LArm, RArm, LForeArm, RForeArm, LHand, RHand,
+LLeg, RLeg, LUpLeg, RUpLe, LFoot, RFoot,
+HEAD, BODY
+            
 ```
 
 ## Syntax Rules

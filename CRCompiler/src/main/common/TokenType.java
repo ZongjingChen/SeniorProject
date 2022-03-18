@@ -24,7 +24,7 @@ public enum TokenType {
     COMMA, // comma ","
     PERIOD, // period "."
     // the rest are reserved words whose lexeme matches their name
-    BEGIN, MODEL, XBOT, YBOT, END, TIME, sim,
+    BEGIN, MODEL, XBOT, YBOT, END, TIME, sim, mod,
     seq,
     LArm,
     RArm,
@@ -92,5 +92,6 @@ public enum TokenType {
         addReserved(BODY);
         addReserved(EQ);
         addReserved(function);
+        addReserved(mod);
     }
 }

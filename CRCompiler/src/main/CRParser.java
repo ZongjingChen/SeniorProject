@@ -4,7 +4,6 @@ import main.AST.*;
 import main.common.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class CRParser implements Parser {
@@ -178,13 +177,13 @@ public class CRParser implements Parser {
      */
     private Statement parseStatement() {
         if (willMatch(TokenType.ID)) {
+            Position start = currentPosition;
             Token token = skip();
             if (willMatch(TokenType.ASSIGN)) {
-                return parseAssignment();
+                return parseAssignment(start, token);
             }
             else {
-//                return parseFunctionCall();
-                return null;
+                return parseFunctionCall(start, token);
             }
         }
         else if (willMatch(TokenType.sim)) {
@@ -206,19 +205,22 @@ public class CRParser implements Parser {
     /*
      * Assignment -> ident = Expression
      */
-    private Statement parseAssignment() {
-        Position start = currentPosition;
-        Token idToken = skip();
+    private Assignment parseAssignment(Position start, Token idToken) {
         Identifier ident = new Identifier(idToken.getPosition(), idToken.getLexeme());
         match(TokenType.ASSIGN);
         Expression expression = parseExpression();
         return new Assignment(start, ident, expression);
     }
 
+    private FunctionCall parseFunctionCall(Position start, Token idToken) {
+        Identifier ident = new Identifier(idToken.getPosition(), idToken.getLexeme());
+        return new FunctionCall(start, ident, parseActualParams());
+    }
+
     /*
      * SimBlock -> sim { StatementSequence }
      */
-    private Statement parseSimBlock() {
+    private SimBlock parseSimBlock() {
         Position start = currentPosition;
         skip();
         match(TokenType.LCB);
@@ -230,7 +232,7 @@ public class CRParser implements Parser {
     /*
      * SeqBlock -> sim { StatementSequence }
      */
-    private Statement parseSeqBlock() {
+    private SeqBlock parseSeqBlock() {
         Position start = currentPosition;
         skip();
         match(TokenType.LCB);
@@ -242,7 +244,7 @@ public class CRParser implements Parser {
     /*
      * PrimitiveFunctionCall -> BodyPart . BuiltInFunctionName ActualParameters
      */
-    private Statement parsePrimitiveFunctionCall() {
+    private PrimitiveFunctionCall parsePrimitiveFunctionCall() {
         Position start = currentPosition;
         Token body = skip();
         match(TokenType.PERIOD);
@@ -294,7 +296,94 @@ public class CRParser implements Parser {
      * Expression -> Term ExprRest
      */
     private Expression parseExpression() {
-        //TODO:
-        return null;
+        Position start = currentPosition;
+        if(willMatch(TokenType.PLUS)) {
+            skip();
+            return new UnaryOperation(start, UnaryOperation.OpType.PLUS, parseExprRest(parseTerm()));
+        }
+        else if (willMatch(TokenType.MINUS)) {
+            skip();
+            return new UnaryOperation(start, UnaryOperation.OpType.MINUS, parseExprRest(parseTerm()));
+        }
+        else {
+            return parseExprRest(parseTerm());
+        }
+    }
+
+    /*
+     * ExprRest -> AddOperator Term ExprRest
+     * ExprRest ->
+     * AddOperator -> + | -
+     */
+    private Expression parseExprRest(Expression lhs) {
+        // recursion
+        if(willMatch(TokenType.PLUS)) {
+            skip();
+            Position start = currentPosition;
+            return parseExprRest(new BinaryOperation(start, lhs, BinaryOperation.OpType.PLUS, parseTerm()));
+        }
+        else if(willMatch(TokenType.MINUS)) {
+            skip();
+            Position start = currentPosition;
+            return parseExprRest(new BinaryOperation(start, lhs, BinaryOperation.OpType.MINUS, parseTerm()));
+        }
+        else {
+            return lhs;
+        }
+    }
+
+    /*
+     * Term -> Factor TermRest
+     */
+    private Expression parseTerm() {
+        return parseTermRest(parseFactor());
+    }
+
+    /*
+     * TermRest -> MulOperator Factor TermRest
+     * TermRest ->
+     * MulOperator -> * | / | mod
+     */
+     private Expression parseTermRest(Expression lhs) {
+         if(willMatch(TokenType.TIMES)) {
+             Position start = currentPosition;
+             skip();
+             return parseTermRest(new BinaryOperation(start, lhs, BinaryOperation.OpType.TIMES, parseFactor()));
+         }
+         else if(willMatch(TokenType.DIVIDE)) {
+             Position start = currentPosition;
+             skip();
+             return parseTermRest(new BinaryOperation(start, lhs, BinaryOperation.OpType.DIV, parseFactor()));
+         }
+         else if(willMatch(TokenType.mod)) {
+             Position start = currentPosition;
+             skip();
+             return parseTermRest(new BinaryOperation(start, lhs, BinaryOperation.OpType.MOD, parseFactor()));
+         }
+         else {
+             return lhs;
+         }
+     }
+
+    /*
+     * Factor -> number
+     * Factor -> ident
+     * Factor -> ( Expression )
+     */
+    private Expression parseFactor() {
+        if(willMatch(TokenType.ID)) {
+            Token idToken = skip();
+            return new Identifier(idToken.getPosition(), idToken.getLexeme());
+        }
+        else if(willMatch(TokenType.NUM)) {
+            Token numToken = skip();
+            return new NumValue(numToken.getPosition(), numToken.getLexeme());
+        }
+        else {
+            match(TokenType.LPAR);
+            Expression expression = parseExpression();
+            match(TokenType.RPAR);
+            return expression;
+        }
     }
 }

@@ -15,4 +15,11 @@ public class SimBlock extends AbstractASTNode implements Statement{
     public List<Statement> getStatements() {
         return statements;
     }
+
+    @Override
+    public String toString() {
+        return "SimBlock{" +
+                "statements=" + statements +
+                '}';
+    }
 }
