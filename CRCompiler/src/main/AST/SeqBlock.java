@@ -22,4 +22,10 @@ public class SeqBlock extends AbstractASTNode implements Statement{
                 "statements=" + statements +
                 '}';
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
+
 }

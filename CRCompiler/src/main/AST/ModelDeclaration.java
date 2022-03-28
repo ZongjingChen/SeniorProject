@@ -21,4 +21,9 @@ public class ModelDeclaration extends AbstractASTNode{
                 "\tmodel=" + model +
                 "\n}";
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
 }

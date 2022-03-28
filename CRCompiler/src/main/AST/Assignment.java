@@ -24,4 +24,9 @@ public class Assignment extends AbstractASTNode implements Statement {
     public String toString() {
         return ident + " = " + expression;
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
 }

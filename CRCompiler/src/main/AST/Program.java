@@ -36,4 +36,9 @@ public class Program extends AbstractASTNode {
                 "\tstatements=" + statements +
                 "\n}";
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
 }

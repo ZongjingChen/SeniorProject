@@ -37,4 +37,9 @@ public class PrimitiveFunctionCall extends AbstractASTNode implements Statement 
                 ", parameters=" + parameters +
                 '}';
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
 }

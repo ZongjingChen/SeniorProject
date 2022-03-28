@@ -21,4 +21,9 @@ public class FunctionCall extends AbstractASTNode implements Statement{
     public List<Expression> getActualParams() {
         return actualParams;
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
 }

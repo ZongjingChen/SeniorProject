@@ -27,6 +27,11 @@ public class BinaryOperation extends AbstractASTNode implements Expression{
         return operation;
     }
 
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
+
     public enum OpType{
         PLUS("+"),
         MINUS("-"),
