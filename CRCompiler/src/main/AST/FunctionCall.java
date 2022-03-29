@@ -14,7 +14,7 @@ public class FunctionCall extends AbstractASTNode implements Statement{
         this.actualParams = actualParams;
     }
 
-    public Identifier getName() {
+    public Identifier getIdent() {
         return name;
     }
 

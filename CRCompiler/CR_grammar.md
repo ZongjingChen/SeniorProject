@@ -57,8 +57,8 @@ Assignment -> ident = Expression
 
 FunctionCall -> ident ActualParameters
 
-PrimitiveFunctionCall -> BodyPart . BuiltInFunctionName ActualParameters
-PrimitiveFunctionName -> raise | lateralRaise | rotate 
+PrimitiveFunctionCall -> BodyPart . PrimitiveFunctionName ActualParameters
+PrimitiveFunctionName -> raise | lateralRaise | rotate | tilt
 
 BodyPart -> LArm | RArm | LForeArm | RForeArm | LHand | RHand |
             LLeg | RLeg | LUpLeg | RUpLeg | LFoot | RFoot |

@@ -12,11 +12,33 @@ public class Main {
     private static Source source;
     private static CRLexer lexer;
     private static CRParser parser;
+    private static CRChecker checker;
     private static ErrorLog errorLog = new ErrorLog();
 
     public static void main(String[] args) {
 //        testLexer();
-        testParser();
+//        testParser();
+        testChecker();
+    }
+
+    private static void testChecker() {
+        initChecker("test/testChecker.cr");
+        try{
+            Program program = parser.parseProgram();
+            program.accept(checker);
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        for(ErrorLog.LogItem item : errorLog) {
+            System.err.println(item);
+        }
+    }
+
+    private static void initChecker(String fileName) {
+        initParser(fileName);
+        checker = new CRChecker(errorLog);
     }
 
     private static void testParser() {
