@@ -3,7 +3,7 @@ package main.AST;
 import main.common.Position;
 import main.common.TokenType;
 
-public class ModelDeclaration extends AbstractASTNode{
+public class ModelDeclaration extends AbstractASTNode implements Declaration{
     private TokenType model;
 
     public ModelDeclaration (Position start, TokenType model) {
@@ -25,5 +25,10 @@ public class ModelDeclaration extends AbstractASTNode{
     @Override
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public void accept(Generator generator) {
+        generator.generate(this);
     }
 }

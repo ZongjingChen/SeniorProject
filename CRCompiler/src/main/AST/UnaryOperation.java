@@ -25,6 +25,11 @@ public class UnaryOperation extends AbstractASTNode implements Expression{
         visitor.visit(this);
     }
 
+    @Override
+    public double acceptResult(ExpressionVisitor visitor) {
+        return visitor.visitResult(this);
+    }
+
     public enum OpType {
         PLUS("+"),
         MINUS("-");

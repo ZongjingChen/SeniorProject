@@ -26,4 +26,9 @@ public class FunctionCall extends AbstractASTNode implements Statement{
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public void accept(Generator generator) {
+        generator.generate(this);
+    }
 }

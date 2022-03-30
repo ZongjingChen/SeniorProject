@@ -2,24 +2,19 @@ package main.AST;
 
 import main.common.Position;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SimBlock extends AbstractASTNode implements Statement{
-    private List<Statement> statements;
+public class SimBlock extends Block implements Statement{
 
     public SimBlock(Position start, List<Statement> statements) {
-        super(start);
-        this.statements = statements;
-    }
-
-    public List<Statement> getStatements() {
-        return statements;
+        super(start, statements);
     }
 
     @Override
     public String toString() {
         return "SimBlock{" +
-                "statements=" + statements +
+                "statements=" + getStatements() +
                 '}';
     }
 
@@ -27,4 +22,10 @@ public class SimBlock extends AbstractASTNode implements Statement{
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public void accept(Generator generator) {
+        generator.generate(this);
+    }
+
 }

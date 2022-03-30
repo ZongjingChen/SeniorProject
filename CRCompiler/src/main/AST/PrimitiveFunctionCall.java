@@ -1,10 +1,8 @@
 package main.AST;
 
 import main.common.Position;
-import main.common.Token;
 import main.common.TokenType;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,5 +52,10 @@ public class PrimitiveFunctionCall extends AbstractASTNode implements Statement 
     @Override
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public void accept(Generator generator) {
+        generator.generate(this);
     }
 }

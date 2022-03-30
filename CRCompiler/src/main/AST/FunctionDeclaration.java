@@ -4,7 +4,7 @@ import main.common.Position;
 
 import java.util.List;
 
-public class FunctionDeclaration extends AbstractASTNode{
+public class FunctionDeclaration extends AbstractASTNode implements Declaration{
     private Identifier name;
     private List<Identifier> paramList;
     private List<Statement> statements;
@@ -40,5 +40,10 @@ public class FunctionDeclaration extends AbstractASTNode{
     @Override
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public void accept(Generator generator) {
+        generator.generate(this);
     }
 }

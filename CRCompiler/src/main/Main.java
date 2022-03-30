@@ -13,12 +13,35 @@ public class Main {
     private static CRLexer lexer;
     private static CRParser parser;
     private static CRChecker checker;
+    private static JSCodeGenerator generator;
     private static ErrorLog errorLog = new ErrorLog();
 
     public static void main(String[] args) {
 //        testLexer();
 //        testParser();
-        testChecker();
+//        testChecker();
+        testGenerator();
+    }
+
+    private static void testGenerator() {
+        initGenerator("test/testGenerator.cr");
+        try{
+            Program program = parser.parseProgram();
+            program.accept(checker);
+            program.accept(generator);
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        for(ErrorLog.LogItem item : errorLog) {
+            System.err.println(item);
+        }
+    }
+
+    private static void initGenerator(String fileName) {
+        initChecker(fileName);
+        generator = new JSCodeGenerator(errorLog);
     }
 
     private static void testChecker() {

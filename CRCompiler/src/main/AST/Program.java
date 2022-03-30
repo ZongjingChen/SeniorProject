@@ -16,7 +16,7 @@ public class Program extends AbstractASTNode {
         this.statements = statements;
     }
 
-    public ModelDeclaration getModel() {
+    public ModelDeclaration getModelDecl() {
         return modelDecl;
     }
 
@@ -40,5 +40,9 @@ public class Program extends AbstractASTNode {
     @Override
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
+    }
+
+    public void accept(Generator generator) {
+        generator.generate(this);
     }
 }

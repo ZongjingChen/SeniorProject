@@ -93,8 +93,7 @@ public class CRChecker implements ASTVisitor {
             errorLog.add("Unknown primitive function [" + name +"] for [" + body.toString() + "]", primitiveFunctionCall.getStart());
             throw new CheckerException("Checking aborted");
         }
-        else if((body == TokenType.BODY && primitiveFunctionCall.getParameters().size() != 1) ||
-                primitiveFunctionCall.getParameters().size() != 2){
+        else if(primitiveFunctionCall.getParameters().size() != 2){
             errorLog.add("Parameter mismatch", primitiveFunctionCall.getStart());
             throw new CheckerException("Checking aborted");
         }

@@ -23,4 +23,9 @@ public class NumValue extends AbstractASTNode implements Expression{
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public double acceptResult(ExpressionVisitor visitor) {
+        return visitor.visitResult(this);
+    }
 }
