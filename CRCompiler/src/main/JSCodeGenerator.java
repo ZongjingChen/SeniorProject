@@ -1,6 +1,7 @@
 package main;
 
 import main.AST.*;
+import main.AST.Timer;
 import main.common.ErrorLog;
 import main.AST.ExpressionVisitor;
 import main.AST.Generator;
@@ -12,18 +13,14 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
     private final HashMap<String, FunctionDeclaration> functionMap;
     private final HashMap<String, Double> environment;
     private final Deque<HashMap<String, Double>> stack;
-    private double time;
-    private double seqTime;
-    private boolean sim;
+    private final Timer timer;
 
     public JSCodeGenerator(ErrorLog errorLog) {
         this.errorLog = errorLog;
         this.functionMap = new HashMap<>();
         this.environment = new HashMap<>();
         this.stack = new ArrayDeque<>();
-        this.time = 0;
-        this.seqTime = -1;
-        this.sim = false;
+        this.timer = new Timer();
     }
 
     @Override
@@ -59,8 +56,13 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
         current.put(assignment.getIdent().getLexeme(), assignment.getExpression().acceptResult(this));
     }
 
+    /**
+     * Function call is treated as a seqBlock
+     * @param functionCall
+     */
     @Override
     public void generate(FunctionCall functionCall) {
+        // Push a new variable map
         HashMap<String, Double> current = new HashMap<>();
         List<Identifier> paramList = functionMap.get(functionCall.getIdent().getLexeme()).getParamList();
         List<Expression> actualParamList = functionCall.getActualParams();
@@ -68,15 +70,34 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
             current.put(paramList.get(i).getLexeme(), actualParamList.get(i).acceptResult(this));
         }
         stack.push(current);
-        for(Statement statement : functionMap.get(functionCall.getIdent().getLexeme()).getStatements()) {
+
+        // Construct a seqBlock
+        List<Statement> statements = functionMap.get(functionCall.getIdent().getLexeme()).getStatements();
+        SeqBlock seqBlock = new SeqBlock(functionCall.getStart(), statements);
+
+        // Only add new SEQ scope if this seq block is in a sim block
+        if(timer.getCurrentScope() == Timer.Scope.SIM) {
+            timer.addNewTime(Timer.Scope.SEQ, timer.getCurrentTime());
+        }
+
+        for(Statement statement : statements) {
             statement.accept(this);
         }
+
+        // Pop the SEQ block
+        if(timer.getCurrentScope() == Timer.Scope.SIM) {
+            timer.pop();
+        }
+
         stack.pop();
     }
 
+    /**
+     * Only update currentTime when in a seqBlock or not in a block. SimBlock will update time for statements.
+     * @param primitiveFunctionCall
+     */
     @Override
     public void generate(PrimitiveFunctionCall primitiveFunctionCall) {
-
         String body = primitiveFunctionCall.getBody().toString();
         String function = primitiveFunctionCall.getName().getLexeme();
 
@@ -84,47 +105,65 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
         double degree = primitiveFunctionCall.getDegree(this);
         double duration = primitiveFunctionCall.getDuration(this);
 
-        if(seqTime != -1) {
-            generateCode(function + body + "(" + degree + "," + seqTime + "," + duration + ");");
-            seqTime += duration;
-        }
-        else {
-            generateCode(function + body + "(" + degree + "," + time + "," + duration + ");");
-            if(!sim) {
-                time += duration;
-            }
+        generateCode(function + body + "(" + degree + "," + timer.getCurrentTime() + "," + duration + ");");
+
+        // If not under SIM scope, update current time
+        if(timer.getCurrentScope() != Timer.Scope.SIM) {
+            timer.updateTime(duration);
         }
     }
 
-    private void generate(PrimitiveFunctionCall primitiveFunctionCall, double time) {
-
-    }
-
+    /**
+     * generate a simBlock will update the time for all its statements.
+     * @param simBlock
+     */
     @Override
     public void generate(SimBlock simBlock) {
-        if seqBlock{
-            update seqTime
-        }
-        else if simBlock{
+        // Add new variable map
+        HashMap<String, Double> currentMap = new HashMap<>();
+        stack.push(currentMap);
 
+        // Add new time scope
+        double newTime = timer.getCurrentTime();
+        timer.addNewTime(Timer.Scope.SIM, newTime);
+
+        for(Statement statement : simBlock.getStatements()) {
+            statement.accept(this);
         }
-        else{
-            find logest duration;
-            update global time;
-        }
+
+        timer.pop();
+
+        // Update time
+        timer.updateTime(simBlock.getDuration(this));
+
+        stack.pop();
     }
 
+    /**
+     * A seqBlock uses its local time. If the outer scope is SEQ, there is no need to add a new SEQ scope.
+     * @param seqBlock
+     */
     @Override
     public void generate(SeqBlock seqBlock) {
-//        if(seqBlock) {
-//            update seqTime
-//        }
-//        else if(SimBlock) {
-//
-//        }
-//        else {
-//            generate(seqBlock.getStatements());
-//        }
+        // Add new variable map
+        HashMap<String, Double> currentMap = new HashMap<>();
+        stack.push(currentMap);
+
+        // Only add new SEQ scope if this seq block is in a sim block
+        if(timer.getCurrentScope() == Timer.Scope.SIM) {
+            timer.addNewTime(Timer.Scope.SEQ, timer.getCurrentTime());
+        }
+
+        for(Statement statement : seqBlock.getStatements()) {
+            statement.accept(this);
+        }
+
+        // Pop the SEQ block
+        if(timer.getCurrentScope() == Timer.Scope.SIM) {
+            timer.pop();
+        }
+
+        stack.pop();
     }
 
     @Override
