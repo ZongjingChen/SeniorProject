@@ -57,7 +57,7 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
     }
 
     /**
-     * Function call is treated as a seqBlock
+     * Function call is handled as a seqBlock
      * @param functionCall
      */
     @Override
@@ -71,20 +71,16 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
         }
         stack.push(current);
 
-        // Construct a seqBlock
-        List<Statement> statements = functionMap.get(functionCall.getIdent().getLexeme()).getStatements();
-        SeqBlock seqBlock = new SeqBlock(functionCall.getStart(), statements);
-
-        // Only add new SEQ scope if this seq block is in a sim block
+        // Only add new SEQ scope if this function call is in a sim block
         if(timer.getCurrentScope() == Timer.Scope.SIM) {
             timer.addNewTime(Timer.Scope.SEQ, timer.getCurrentTime());
         }
 
-        for(Statement statement : statements) {
+        for(Statement statement : functionMap.get(functionCall.getIdent().getLexeme()).getStatements()) {
             statement.accept(this);
         }
 
-        // Pop the SEQ block
+        // Pop the SEQ scope
         if(timer.getCurrentScope() == Timer.Scope.SIM) {
             timer.pop();
         }
@@ -217,6 +213,9 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
     }
 
     public void generateCode(String msg) {
+        // TODO: Write code to a target file.
+
+        // For test
         System.out.println(msg);
     }
 }
