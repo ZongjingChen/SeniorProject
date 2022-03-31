@@ -13,6 +13,7 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
     private final HashMap<String, Double> environment;
     private final Deque<HashMap<String, Double>> stack;
     private double time;
+    private double seqTime;
     private boolean sim;
 
     public JSCodeGenerator(ErrorLog errorLog) {
@@ -21,6 +22,7 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
         this.environment = new HashMap<>();
         this.stack = new ArrayDeque<>();
         this.time = 0;
+        this.seqTime = -1;
         this.sim = false;
     }
 
@@ -74,32 +76,55 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
 
     @Override
     public void generate(PrimitiveFunctionCall primitiveFunctionCall) {
+
         String body = primitiveFunctionCall.getBody().toString();
         String function = primitiveFunctionCall.getName().getLexeme();
 
         // Example: HEAD.rotate(degree, duration);
-        double degree = primitiveFunctionCall.getParameters().get(0).acceptResult(this);
-        double duration = primitiveFunctionCall.getParameters().get(1).acceptResult(this);
+        double degree = primitiveFunctionCall.getDegree(this);
+        double duration = primitiveFunctionCall.getDuration(this);
 
-        generateCode(function + body + "(" + degree + "," + time + "," + duration + ");");
-        if(!sim) {
-            time += duration;
+        if(seqTime != -1) {
+            generateCode(function + body + "(" + degree + "," + seqTime + "," + duration + ");");
+            seqTime += duration;
         }
+        else {
+            generateCode(function + body + "(" + degree + "," + time + "," + duration + ");");
+            if(!sim) {
+                time += duration;
+            }
+        }
+    }
+
+    private void generate(PrimitiveFunctionCall primitiveFunctionCall, double time) {
+
     }
 
     @Override
     public void generate(SimBlock simBlock) {
-        sim = true;
-        for(Expression expression : simBlock.getDurations()) {
-            generateCode(expression.toString());
+        if seqBlock{
+            update seqTime
         }
+        else if simBlock{
 
-        sim = false;
+        }
+        else{
+            find logest duration;
+            update global time;
+        }
     }
 
     @Override
     public void generate(SeqBlock seqBlock) {
-
+//        if(seqBlock) {
+//            update seqTime
+//        }
+//        else if(SimBlock) {
+//
+//        }
+//        else {
+//            generate(seqBlock.getStatements());
+//        }
     }
 
     @Override

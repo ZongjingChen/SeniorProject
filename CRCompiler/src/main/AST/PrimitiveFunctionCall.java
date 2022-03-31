@@ -58,4 +58,12 @@ public class PrimitiveFunctionCall extends AbstractASTNode implements Statement 
     public void accept(Generator generator) {
         generator.generate(this);
     }
+
+    public double getDuration(ExpressionVisitor visitor) {
+        return parameters.get(1).acceptResult(visitor);
+    }
+
+    public double getDegree(ExpressionVisitor visitor) {
+        return parameters.get(0).acceptResult(visitor);
+    }
 }
