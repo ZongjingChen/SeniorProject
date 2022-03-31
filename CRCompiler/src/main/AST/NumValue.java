@@ -2,7 +2,7 @@ package main.AST;
 
 import main.common.Position;
 
-public class NumValue extends AbstractASTNode implements Expression{
+public class NumValue extends AbstractASTNode implements Expression {
     private final String lexeme;
 
     public NumValue(Position start, String lexeme) {
@@ -12,6 +12,10 @@ public class NumValue extends AbstractASTNode implements Expression{
 
     public String getLexeme() {
         return lexeme;
+    }
+
+    public double getValue() {
+        return Double.parseDouble(lexeme);
     }
 
     @Override

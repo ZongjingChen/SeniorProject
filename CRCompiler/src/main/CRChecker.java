@@ -69,7 +69,7 @@ public class CRChecker implements ASTVisitor {
             throw new CheckerException("Checking aborted");
         }
         else if(functionCall.getActualParams().size() != functionVar.get(name)) {
-            errorLog.add("Parameter mismatch", functionCall.getStart());
+            errorLog.add("Parameter not match", functionCall.getStart());
             throw new CheckerException("Checking aborted");
         }
         else {
@@ -94,7 +94,7 @@ public class CRChecker implements ASTVisitor {
             throw new CheckerException("Checking aborted");
         }
         else if(primitiveFunctionCall.getParameters().size() != 2){
-            errorLog.add("Parameter mismatch", primitiveFunctionCall.getStart());
+            errorLog.add("Parameter not match", primitiveFunctionCall.getStart());
             throw new CheckerException("Checking aborted");
         }
         else {
