@@ -6,7 +6,7 @@ import main.common.TokenType;
 import java.util.List;
 import java.util.Map;
 
-public class PrimitiveFunctionCall extends AbstractASTNode implements Statement {
+public class PrimitiveFunctionCall extends AbstractASTNode implements Statement, TimeConsumable {
     private final TokenType body;
     private final Identifier name;
     private final List<Expression> parameters;

@@ -2,7 +2,11 @@ MODEL = YBOT;
 
 function testFunc1(a, c) {
     a = 30;
-    LArm.raise(a, c);
+    sim{
+        LArm.raise(a, c);
+        RArm.raise(20, a);
+        BODY.rotate(10, 5);
+    }
 }
 
 function testFunc2(a, b) {
@@ -13,9 +17,8 @@ function testFunc2(a, b) {
 
 BEGIN
 
-a = 10;
-testFunc2(a, 20);
-LHand.rotate(a, 2);
+testFunc1(10, 10);
+HEAD.raise(2, 5);
 
 END
 //some comment
