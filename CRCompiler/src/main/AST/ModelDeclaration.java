@@ -18,8 +18,8 @@ public class ModelDeclaration extends AbstractASTNode implements Declaration{
     @Override
     public String toString() {
         return "ModelDeclaration{\n" +
-                "\tmodel=" + model +
-                "\n}";
+                "\t\tmodel=" + model +
+                "\n\t}";
     }
 
     @Override

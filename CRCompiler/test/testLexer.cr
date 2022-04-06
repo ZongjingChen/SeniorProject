@@ -1,12 +1,12 @@
 MODEL = XBOT;
-function someFun(a, b){
+function function1(a, b){
     num a = 10;
 }
 BEGIN
-someFun(10, 20);
+function1(10, 20);
 // This is comment /.,<>={}:"[]\|@!#$%^&*()_+-=`~
-num a = 10.5;
-num b = 20;
+a = 10.5;
+b = 20;
 a > b;
 a <= c;
 

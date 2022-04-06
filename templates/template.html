@@ -190,16 +190,16 @@
                      */
                     // Checkpoint #1 demo
                     {
-                        // rotateHead(45, 0, 2);
-                        // raiseLeftArm(90, 2, 2);
-                        // raiseLeftForeArm(90, 0, 2);
+                        rotateHead(45, 0, 2);
+                        // raiseLArm(90, 2, 2);
+                        // raiseLForeArm(90, 0, 2);
                         //
                         // rotateBody(-45, 2, 2);
-                        // raiseRightUpLeg(45, 2, 2);
-                        // raiseRightLeg(90, 2, 2);
+                        // raiseRUpLeg(45, 2, 2);
+                        // raiseRLeg(90, 2, 2);
 
                         // dance(1, 0, 5);
-                        rotateBody(45, 5, 2);
+                        // rotateBody(45, 5, 2);
                     }
 
                     {
@@ -215,30 +215,30 @@
                         // rotateBody(45, 0, 2);
                         // bow(45, 0, 2);
                         // rotateHead(60, 0, 3);
-                        // rotateLeftFoot(30, 0, 2);
-                        // rotateRightFoot(-30, 0, 2);
-                        // raiseLeftForeArm(45, 0, 2);
-                        // raiseRightForeArm(45, 0, 2);
-                        // rotateLeftHand(30, 0, 2);
-                        // rotateRightHand(30, 0, 2);
+                        // rotateLFoot(30, 0, 2);
+                        // rotateRFoot(-30, 0, 2);
+                        // raiseLForeArm(45, 0, 2);
+                        // raiseRForeArm(45, 0, 2);
+                        // rotateLHand(30, 0, 2);
+                        // rotateRHand(30, 0, 2);
 
-                        // raiseLeftLeg(-45, 2, 4);
-                        // raiseRightLeg(45, 2, 4);
-                        // raiseLeftForeArm(45, 0, 2);
-                        // raiseRightForeArm(45, 0, 2);
-                        // raiseLeftForeArm(-45, 2, 4);
-                        // raiseRightForeArm(-45, 2, 4);
+                        // raiseLLeg(-45, 2, 4);
+                        // raiseRLeg(45, 2, 4);
+                        // raiseLForeArm(45, 0, 2);
+                        // raiseRForeArm(45, 0, 2);
+                        // raiseLForeArm(-45, 2, 4);
+                        // raiseRForeArm(-45, 2, 4);
                         // raiseHead(45, 0, 2);
                         // raiseLeftUpLegLateral(45, 0, 2);
                         // raiseRightUpLegLateral(45, 0, 2);
-                        // raiseLeftArmLateral(-90, 0, 2);
-                        // raiseLeftArm(90, 0, 2);
+                        // raiseLArmLateral(-90, 0, 2);
+                        // raiseLArm(90, 0, 2);
                         // rotateOnAxis(SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton), )
-                        // raiseRightArmLateral(90, 0, 2);
-                        // raiseRightArm(90, 2, 4);
+                        // lateralRaiseLArm(90, 0, 2);
+                        // raiseRArm(90, 2, 4);
                         // rotateHead(-45, 0, 2);
-                        // raiseLeftUpLeg(45, 0, 2);
-                        // raiseRightUpLeg(45, 0, 2);
+                        // raiseLUpLeg(45, 0, 2);
+                        // raiseRUpLeg(45, 0, 2);
                     }
 
                     delta += clock.getDelta();
@@ -250,7 +250,7 @@
                 }
 
                 // Left arm rotate about its local y axis
-                function raiseLeftArm(degree, startTime, duration){
+                function raiseLArm(degree, startTime, duration){
                     // Decide if this action should take place
                     if(startTime <= delta && delta <= startTime + duration){
                         // Calculate the degree for arm to change
@@ -267,7 +267,7 @@
                 }
 
                 // Right arm rotate about its local y axis
-                function raiseRightArm(degree, startTime, duration){
+                function raiseRArm(degree, startTime, duration){
                     // Decide if this action should take place
                     if(startTime <= delta && delta <= startTime + duration){
                         // Calculate the degree for arm to change
@@ -283,7 +283,7 @@
                 }
 
                 // Left arm rotate about its local z axis
-                function raiseLeftArmLateral(degree, startTime, duration) {
+                function raiseLArmLateral(degree, startTime, duration) {
                     // Decide if this action should take place
                     if(startTime <= delta && delta <= startTime + duration){
                         // Calculate the degree for arm to change
@@ -300,7 +300,7 @@
                 }
 
                 // Right arm rotate about its local z axis
-                function raiseRightArmLateral(degree, startTime, duration) {
+                function lateralRaiseLArm(degree, startTime, duration) {
                     // Decide if this action should take place
                     if(startTime <= delta && delta <= startTime + duration){
                         // Calculate the degree for arm to change
@@ -317,7 +317,7 @@
                 }
 
                 // Left forearm rotate about its local y axis
-                function raiseLeftForeArm(degree, startTime, duration) {
+                function raiseLForeArm(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration){
                         // Counter clockwise, calculate degree change for one frame
                         degree = - degree / (FPS * duration);
@@ -326,7 +326,7 @@
                 }
 
                 // Right forearm rotate about its local y axis
-                function raiseRightForeArm(degree, startTime, duration) {
+                function raiseRForeArm(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration){
                         // Counter clockwise, calculate degree change for one frame
                         degree = degree / (FPS * duration);
@@ -335,7 +335,7 @@
                 }
 
                 // Rotate left hand about local x axis, positive degree indicates right rotate
-                function rotateLeftHand(degree, startTime, duration) {
+                function rotateLHand(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration){
                         // Counter clockwise, calculate degree change for one frame
                         degree = degree / (FPS * duration);
@@ -344,7 +344,7 @@
                 }
 
                 // Rotate right hand about local x axis, positive degree indicates left rotate
-                function rotateRightHand(degree, startTime, duration) {
+                function rotateRHand(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration){
                         // Counter clockwise, calculate degree change for one frame
                         degree = degree / (FPS * duration);
@@ -385,7 +385,7 @@
                 }
 
                 // Left up leg rotate about x axis
-                function raiseLeftUpLeg(degree, startTime, duration) {
+                function raiseLUpLeg(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration) {
                         // Counter clockwise
                         degree = - degree / (FPS * duration);
@@ -394,7 +394,7 @@
                 }
 
                 // Right up leg rotate about x axis
-                function raiseRightUpLeg(degree, startTime, duration) {
+                function raiseRUpLeg(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration) {
                         // Counter clockwise
                         degree = - degree / (FPS * duration);
@@ -403,7 +403,7 @@
                 }
 
                 // Left leg rotate about x axis
-                function raiseLeftLeg(degree, startTime, duration) {
+                function raiseLLeg(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration) {
                         // Counter clockwise
                         degree = degree / (FPS * duration);
@@ -412,7 +412,7 @@
                 }
 
                 // Right leg rotate about x axis
-                function raiseRightLeg(degree, startTime, duration) {
+                function raiseRLeg(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration) {
                         // Counter clockwise
                         degree = degree / (FPS * duration);
@@ -440,7 +440,7 @@
 
 
                 // Rotate left foot about local y axis, positive degree indicates left rotate
-                function rotateLeftFoot(degree, startTime, duration) {
+                function rotateLFoot(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration){
                         // Counter clockwise, calculate degree change for one frame
                         degree = degree / (FPS * duration);
@@ -449,7 +449,7 @@
                 }
 
                 // Rotate right foot about local y axis, positive degree indicates left rotate
-                function rotateRightFoot(degree, startTime, duration) {
+                function rotateRFoot(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration){
                         // Counter clockwise, calculate degree change for one frame
                         degree = degree / (FPS * duration);

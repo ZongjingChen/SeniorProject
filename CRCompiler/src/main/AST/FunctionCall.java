@@ -31,4 +31,12 @@ public class FunctionCall extends AbstractASTNode implements Statement{
     public void accept(Generator generator) {
         generator.generate(this);
     }
+
+    @Override
+    public String toString() {
+        return "FunctionCall{" +
+                "\n\t\t\tname=" + name +
+                "\n\t\t\tactualParams=" + actualParams +
+                "}";
+    }
 }

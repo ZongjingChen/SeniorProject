@@ -30,11 +30,20 @@ public class Program extends AbstractASTNode {
 
     @Override
     public String toString() {
-        return "Program{\n" +
-                "\tmodelDecl=" + modelDecl +
-                "\tfuncDecls=" + funcDecls +
-                "\tstatements=" + statements +
-                "\n}";
+        String result =
+                "Program{\n" +
+                "\t" + modelDecl;
+        result += "\n\tFunctionDeclarations[";
+        for(FunctionDeclaration functionDeclaration : funcDecls) {
+            result = result + "\n\t\t" + functionDeclaration;
+        }
+        result += "\t]\n\tStatements[";
+        for(Statement statement : statements) {
+            result = result + "\n\t\t" + statement;
+        }
+
+        result += "\n\t]\n}";
+        return result;
     }
 
     @Override

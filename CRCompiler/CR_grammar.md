@@ -22,7 +22,7 @@ function, sim, seq
 
 LArm, RArm, LForeArm, RForeArm, LHand, RHand,
 LLeg, RLeg, LUpLeg, RUpLe, LFoot, RFoot,
-HEAD, BODY
+Head, Body
             
 ```
 

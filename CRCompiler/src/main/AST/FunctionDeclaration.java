@@ -31,10 +31,9 @@ public class FunctionDeclaration extends AbstractASTNode implements Declaration{
     @Override
     public String toString() {
         return "FunctionDeclaration{\n" +
-                "\tname=" + name +
-                "\tparamList=" + paramList +
-                "\tstatements=" + statements +
-                "\n";
+                "\t\tname=" + name +
+                "\n\t\tparamList=" + paramList +
+                "\n\t\tstatements=" + statements + "\n";
     }
 
     @Override

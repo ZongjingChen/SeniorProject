@@ -17,14 +17,16 @@ public class Main {
     private static ErrorLog errorLog = new ErrorLog();
 
     public static void main(String[] args) {
+        String inFileName = args[0];
+        String outFileName = args[1];
+        initGenerator(inFileName, outFileName);
+        compile();
 //        testLexer();
 //        testParser();
 //        testChecker();
-        testGenerator();
+//        testGenerator();
     }
-
-    private static void testGenerator() {
-        initGenerator("test/testGenerator.cr");
+    private static void compile() {
         try{
             Program program = parser.parseProgram();
             program.accept(checker);
@@ -39,9 +41,15 @@ public class Main {
         }
     }
 
-    private static void initGenerator(String fileName) {
-        initChecker(fileName);
-        generator = new JSCodeGenerator(errorLog);
+
+    private static void testGenerator() {
+        initGenerator("test/testGenerator.cr", "test/testOutput.cr");
+        compile();
+    }
+
+    private static void initGenerator(String inFileName, String outFileName) {
+        initChecker(inFileName);
+        generator = new JSCodeGenerator(errorLog, outFileName);
     }
 
     private static void testChecker() {

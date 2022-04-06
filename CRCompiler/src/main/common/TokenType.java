@@ -38,8 +38,8 @@ public enum TokenType {
     RUpLeg,
     LFoot,
     RFoot,
-    HEAD,
-    BODY,
+    Head,
+    Body,
     EQ,
     function;
 
@@ -58,8 +58,8 @@ public enum TokenType {
             RUpLeg,
             LFoot,
             RFoot,
-            HEAD,
-            BODY
+            Head,
+            Body
     };
 
     private static void addReserved(TokenType type) {
@@ -88,8 +88,8 @@ public enum TokenType {
         addReserved(RUpLeg);
         addReserved(LFoot);
         addReserved(RFoot);
-        addReserved(HEAD);
-        addReserved(BODY);
+        addReserved(Head);
+        addReserved(Body);
         addReserved(EQ);
         addReserved(function);
         addReserved(mod);

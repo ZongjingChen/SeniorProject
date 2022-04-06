@@ -212,6 +212,9 @@ public class CRParser implements Parser {
         return new Assignment(start, ident, expression);
     }
 
+    /*
+     * FunctionCall -> ident ActualParameters
+     */
     private FunctionCall parseFunctionCall(Position start, Token idToken) {
         Identifier ident = new Identifier(idToken.getPosition(), idToken.getLexeme());
         return new FunctionCall(start, ident, parseActualParams());
@@ -230,7 +233,7 @@ public class CRParser implements Parser {
     }
 
     /*
-     * SeqBlock -> sim { StatementSequence }
+     * SeqBlock -> seq { StatementSequence }
      */
     private SeqBlock parseSeqBlock() {
         Position start = currentPosition;

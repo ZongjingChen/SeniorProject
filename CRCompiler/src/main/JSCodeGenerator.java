@@ -6,6 +6,9 @@ import main.common.ErrorLog;
 import main.AST.ExpressionVisitor;
 import main.AST.Generator;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class JSCodeGenerator implements Generator, ExpressionVisitor {
@@ -14,13 +17,27 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
     private final HashMap<String, Double> environment;
     private final Deque<HashMap<String, Double>> stack;
     private final Timer timer;
+    private final FileWriter writer;
 
-    public JSCodeGenerator(ErrorLog errorLog) {
+    public JSCodeGenerator(ErrorLog errorLog, String path) {
         this.errorLog = errorLog;
         this.functionMap = new HashMap<>();
         this.environment = new HashMap<>();
         this.stack = new ArrayDeque<>();
         this.timer = new Timer();
+
+        // Create a file object
+        File output = new File(path);
+        FileWriter writer = null;
+        try {
+            output.createNewFile();
+            writer = new FileWriter(path, true);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        this.writer = writer;
     }
 
     @Override
@@ -38,6 +55,14 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
         }
         generateCode("****************\n");
         generateCode("// Program end");
+
+        try {
+            writer.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -214,8 +239,15 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
 
     public void generateCode(String msg) {
         // TODO: Write code to a target file.
-
+        try {
+            writer.write("\n");
+            writer.write(msg);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
         // For test
-        System.out.println(msg);
+//        System.out.println(msg);
     }
 }
