@@ -18,8 +18,8 @@ function testFunc2(a, b) {
 
 BEGIN
 
-testFunc1(10, 10);
-Head.raise(2, 5);
+Head.rotate(45, 2);
+LArm.raise(90, 4)
 
 END
 //some comment

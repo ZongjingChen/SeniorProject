@@ -42,19 +42,17 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
 
     @Override
     public void generate(Program program) {
-        generateCode("// Program start");
-        generateCode("// ***Model Decl***");
+        generateCode("MODELDECL");
         program.getModelDecl().accept(this);
-        generateCode("// ****************\n");
+        generateCode("END\n");
         for(FunctionDeclaration functionDeclaration : program.getFuncDecls()) {
             functionDeclaration.accept(this);
         }
-        generateCode("***Statements***");
+        generateCode("STATEMENTS");
         for(Statement statement : program.getStatements()) {
             statement.accept(this);
         }
-        generateCode("****************\n");
-        generateCode("// Program end");
+        generateCode("END");
 
         try {
             writer.close();
@@ -238,7 +236,6 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
     }
 
     public void generateCode(String msg) {
-        // TODO: Write code to a target file.
         try {
             writer.write("\n");
             writer.write(msg);

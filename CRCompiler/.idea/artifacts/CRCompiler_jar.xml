@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CRCompiler:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CRCompiler_jar</output-path>
+    <root id="archive" name="CRCompiler.jar">
+      <element id="module-output" name="CRCompiler" />
+    </root>
+  </artifact>
+</component>

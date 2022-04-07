@@ -3,10 +3,7 @@ package main;
 import main.AST.Program;
 import main.common.*;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
 
 public class Main {
     private static Source source;
@@ -27,17 +24,28 @@ public class Main {
 //        testGenerator();
     }
     private static void compile() {
+        StringBuilder errorMsg = new StringBuilder();
         try{
             Program program = parser.parseProgram();
             program.accept(checker);
             program.accept(generator);
         }
         catch (Exception e) {
-            System.err.println(e.getMessage());
+            errorMsg.append(e.getMessage());
+            errorMsg.append("\n");
+            for(ErrorLog.LogItem item : errorLog) {
+                errorMsg.append(item);
+                errorMsg.append("\n");
+            }
         }
-
-        for(ErrorLog.LogItem item : errorLog) {
-            System.err.println(item);
+        try {
+            System.out.println(errorMsg.toString());
+            FileWriter errorWriter = new FileWriter("Log/CompileError.log", false);
+            errorWriter.write(errorMsg.toString());
+            errorWriter.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

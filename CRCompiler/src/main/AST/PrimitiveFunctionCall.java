@@ -45,8 +45,8 @@ public class PrimitiveFunctionCall extends AbstractASTNode implements Statement,
             "lateralRaise", new TokenType[]{TokenType.LArm, TokenType.RArm, TokenType.LForeArm, TokenType.RForeArm,
                                                 TokenType.LLeg, TokenType.RLeg, TokenType.LUpLeg, TokenType.RUpLeg},
             "rotate", new TokenType[]{TokenType.Head, TokenType.Body, TokenType.LHand, TokenType.RHand, TokenType.LFoot, TokenType.RFoot},
-            "tilt", new TokenType[]{TokenType.Head},
-            "dance", new TokenType[]{TokenType.Body}
+            "tilt", new TokenType[]{TokenType.Head}
+//            "dance", new TokenType[]{TokenType.Body}
     );
 
     @Override
