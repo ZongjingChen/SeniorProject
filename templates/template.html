@@ -250,7 +250,7 @@
                     stats.update();
 
                 }
-
+                // *************************** Arm *******************************
                 // Left arm rotate about its local y axis
                 function raiseLArm(degree, startTime, duration){
                     // Decide if this action should take place
@@ -285,7 +285,7 @@
                 }
 
                 // Left arm rotate about its local z axis
-                function raiseLArmLateral(degree, startTime, duration) {
+                function lateralRaiseLArm(degree, startTime, duration) {
                     // Decide if this action should take place
                     if(startTime <= delta && delta <= startTime + duration){
                         // Calculate the degree for arm to change
@@ -302,7 +302,7 @@
                 }
 
                 // Right arm rotate about its local z axis
-                function lateralRaiseLArm(degree, startTime, duration) {
+                function lateralRaiseRArm(degree, startTime, duration) {
                     // Decide if this action should take place
                     if(startTime <= delta && delta <= startTime + duration){
                         // Calculate the degree for arm to change
@@ -318,6 +318,7 @@
                     }
                 }
 
+                // ************************ Fore Arm ********************
                 // Left forearm rotate about its local y axis
                 function raiseLForeArm(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration){
@@ -336,6 +337,7 @@
                     }
                 }
 
+                // ************************* Hand *****************************
                 // Rotate left hand about local x axis, positive degree indicates right rotate
                 function rotateLHand(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration){
@@ -354,6 +356,7 @@
                     }
                 }
 
+                // ************************** Head ************************
                 // Rotate head, a positive degree will rotate head left
                 function rotateHead(degree, startTime, duration) {
                     if (startTime <= delta && delta <= startTime + duration) {
@@ -370,22 +373,14 @@
                     }
                 }
 
-                // Spine rotate about x axis
-                function bow(degree, startTime, duration) {
+                function tiltHead(degree, startTime, duration) {
                     if (startTime <= delta && delta <= startTime + duration) {
-                        degree = degree / (FPS * duration);
-                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "Spine", skeleton), degree);
+                        degree = -degree / (FPS * duration);
+                        rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "Head", skeleton), degree);
                     }
                 }
 
-                // Spine rotate about y axis, positive degree indicates left rotate
-                function rotateBody(degree, startTime, duration) {
-                    if (startTime <= delta && delta <= startTime + duration) {
-                        degree = degree / (FPS * duration);
-                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "Spine", skeleton), degree);
-                    }
-                }
-
+                // *********************** Up Leg *****************************
                 // Left up leg rotate about x axis
                 function raiseLUpLeg(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration) {
@@ -404,6 +399,25 @@
                     }
                 }
 
+                // Left up leg rotate about Z axis
+                function lateralRaiseLUpLeg(degree, startTime, duration) {
+                    if(startTime <= delta && delta <= startTime + duration) {
+                        // Clockwise
+                        degree = degree / (FPS * duration);
+                        rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "LeftUpLeg", skeleton), degree);
+                    }
+                }
+
+                // Right up leg rotate about Z axis
+                function lateralRaiseRUpLeg(degree, startTime, duration) {
+                    if(startTime <= delta && delta <= startTime + duration) {
+                        // Counter clockwise
+                        degree = - degree / (FPS * duration);
+                        rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "RightUpLeg", skeleton), degree);
+                    }
+                }
+
+                // *********************** Leg ********************************
                 // Left leg rotate about x axis
                 function raiseLLeg(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration) {
@@ -422,25 +436,7 @@
                     }
                 }
 
-                // Left up leg rotate about Z axis
-                function raiseLeftUpLegLateral(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration) {
-                        // Clockwise
-                        degree = degree / (FPS * duration);
-                        rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "LeftUpLeg", skeleton), degree);
-                    }
-                }
-
-                // Right up leg rotate about Z axis
-                function raiseRightUpLegLateral(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration) {
-                        // Counter clockwise
-                        degree = - degree / (FPS * duration);
-                        rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "RightUpLeg", skeleton), degree);
-                    }
-                }
-
-
+                // *********************** Foot *************************
                 // Rotate left foot about local y axis, positive degree indicates left rotate
                 function rotateLFoot(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration){
@@ -459,8 +455,9 @@
                     }
                 }
 
+                // *********************** Body *************************
                 // Begin dance. Pause when finished
-                function dance(speed, startTime, duration){
+                function danceBody(speed, startTime, duration){
                     // FIXME: when more than one dance is called, the animation cannot play
                     if (startTime <= delta && delta <= startTime + duration) {
                         if(!action.isRunning()){
@@ -478,6 +475,28 @@
                     }
                 }
 
+                // Spine rotate about x axis
+                function bowBody(degree, startTime, duration) {
+                    if (startTime <= delta && delta <= startTime + duration) {
+                        degree = degree / (FPS * duration);
+                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "Spine", skeleton), degree);
+                    }
+                }
+
+                // Spine rotate about y axis, positive degree indicates left rotate
+                function rotateBody(degree, startTime, duration) {
+                    if (startTime <= delta && delta <= startTime + duration) {
+                        degree = degree / (FPS * duration);
+                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "Spine", skeleton), degree);
+                    }
+                }
+
+                function tiltBody(degree, startTime, duration) {
+                    if (startTime <= delta && delta <= startTime + duration) {
+                        degree = -degree / (FPS * duration);
+                        rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "Spine", skeleton), degree);
+                    }
+                }
                 /**
                  * Let a body part rotate about its local x axis for a degree
                  * @param bodyPart - body part to rotate
@@ -546,305 +565,6 @@
             }
         }
 
-        class Human{
-            constructor(object) {
-                this.object = object;
-            }
-
-            playAnimation() {
-                const skeleton = this.object.children[0].skeleton;
-                const action = mixer.clipAction(this.object.animations[0]);
-                console.log(action);
-
-                console.log(this.object);
-                // console.log(skeleton);
-
-                // Original state
-                {
-                    // SkeletonUtils.getBoneByName("mixamorig1LeftArm", skeleton).rotation.x = 90 * DEG_TO_RAD;
-                    // SkeletonUtils.getBoneByName("mixamorig1RightArm", skeleton).rotation.x = 90 * DEG_TO_RAD;
-
-                    // SkeletonUtils.getBoneByName("mixamorig1LeftHand", skeleton).rotation.x = 10 * DEG_TO_RAD;
-                    // SkeletonUtils.getBoneByName("mixamorig1RightHand", skeleton).rotation.x = 10 * DEG_TO_RAD;
-                }
-
-                const prefix = "mixamorig1";
-                var delta = 0;
-                animate();
-                function animate(){
-                    requestAnimationFrame(animate);
-
-                    /**
-                     * Compiled code should be inserted here.
-                     */
-                    {
-                        // riseLeftArm(90, 0, 2);
-                    }
-
-                    delta += clock.getDelta();
-
-                    renderer.render(scene, camera);
-                    mixer.update(clock.getDelta());
-                    stats.update();
-                }
-
-                // Left arm rotate about its local z axis
-                function riseLeftArm(degree, startTime, duration){
-                    // Decide if this action should take place
-                    if(startTime <= delta && delta <= startTime + duration){
-                        // Calculate the degree for arm to change
-                        degree = degree / (1 + SHOULDER_TO_ARM_RATIO_X);
-
-                        // Clockwise, calculate degree change for one frame
-                        degree = degree / (FPS * duration);
-                        rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "LeftArm", skeleton), degree);
-
-                        // Add change to shoulder to make the action more vivid.
-                        // rotateWorldX(SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_X);
-                        // console.log(- degree * SHOULDER_TO_ARM_RATIO_X * DEG_TO_RAD);
-                    }
-                }
-
-                // Right arm rotate about its local y axis
-                function riseRightArm(degree, startTime, duration){
-                    // Decide if this action should take place
-                    if(startTime <= delta && delta <= startTime + duration){
-                        // Calculate the degree for arm to change
-                        degree = degree / (1 + SHOULDER_TO_ARM_RATIO_X);
-
-                        // Clockwise
-                        degree = degree / (FPS * duration);
-                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "RightArm", skeleton), degree);
-
-                        // Add change to shoulder to make the action more vivid. Counter clockwise.
-                        rotateWorldX(SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton), - degree * SHOULDER_TO_ARM_RATIO_X);
-                    }
-                }
-
-                // Left arm rotate about its local z axis
-                function riseLeftArmLateral(degree, startTime, duration) {
-                    // Decide if this action should take place
-                    if(startTime <= delta && delta <= startTime + duration){
-                        // Calculate the degree for arm to change
-                        degree = degree / (1 + SHOULDER_TO_ARM_RATIO_Z);
-
-                        // Clockwise
-                        degree = degree / (FPS * duration);
-                        rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "LeftArm", skeleton), degree);
-
-                        // Add change to shoulder to make the action more vivid.
-                        // rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
-                        rotateWorldZ(SkeletonUtils.getBoneByName(prefix + "LeftShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
-                    }
-                }
-
-                // Right arm rotate about its local z axis
-                function riseRightArmLateral(degree, startTime, duration) {
-                    // Decide if this action should take place
-                    if(startTime <= delta && delta <= startTime + duration){
-                        // Calculate the degree for arm to change
-                        degree = degree / (1 + SHOULDER_TO_ARM_RATIO_Z);
-
-                        // CounterClockwise
-                        degree = - degree / (FPS * duration);
-                        rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "RightArm", skeleton), degree);
-
-                        // Add change to shoulder to make the action more vivid.
-                        // rotateLocalZ(SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
-                        rotateWorldZ(SkeletonUtils.getBoneByName(prefix + "RightShoulder", skeleton), degree * SHOULDER_TO_ARM_RATIO_Z);
-                    }
-                }
-
-                // Left forearm rotate about its local y axis
-                function riseLeftForeArm(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration){
-                        // Counter clockwise, calculate degree change for one frame
-                        degree = - degree / (FPS * duration);
-                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "LeftForeArm", skeleton), degree);
-                    }
-                }
-
-                // Right forearm rotate about its local y axis
-                function riseRightForeArm(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration){
-                        // Counter clockwise, calculate degree change for one frame
-                        degree = degree / (FPS * duration);
-                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "RightForeArm", skeleton), degree);
-                    }
-                }
-
-                // Rotate left hand about local x axis, positive degree indicates right rotate
-                function rotateLeftHand(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration){
-                        // Counter clockwise, calculate degree change for one frame
-                        degree = degree / (FPS * duration);
-                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "LeftHand", skeleton), degree);
-                    }
-                }
-
-                // Rotate right hand about local x axis, positive degree indicates left rotate
-                function rotateRightHand(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration){
-                        // Counter clockwise, calculate degree change for one frame
-                        degree = degree / (FPS * duration);
-                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "RightHand", skeleton), degree);
-                    }
-                }
-
-                // Rotate head, a positive degree will rotate head left
-                function rotateHead(degree, startTime, duration) {
-                    if (startTime <= delta && delta <= startTime + duration) {
-                        degree = degree / (FPS * duration);
-                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "Head", skeleton), degree);
-                    }
-                }
-
-                // Rise head
-                function riseHead(degree, startTime, duration) {
-                    if (startTime <= delta && delta <= startTime + duration) {
-                        degree = -degree / (FPS * duration);
-                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "Head", skeleton), degree);
-                    }
-                }
-
-                // Spine rotate about x axis
-                function bow(degree, startTime, duration) {
-                    if (startTime <= delta && delta <= startTime + duration) {
-                        degree = degree / (FPS * duration);
-                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "Spine", skeleton), degree);
-                    }
-                }
-
-                // Left up leg rotate about x axis
-                function riseLeftUpLeg(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration) {
-                        // Counter clockwise
-                        degree = - degree / (FPS * duration);
-                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "LeftUpLeg", skeleton), degree);
-                    }
-                }
-
-                // Right up leg rotate about x axis
-                function riseRightUpLeg(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration) {
-                        // Counter clockwise
-                        degree = - degree / (FPS * duration);
-                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "RightUpLeg", skeleton), degree);
-                    }
-                }
-
-                // Left leg rotate about x axis
-                function riseLeftLeg(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration) {
-                        // Counter clockwise
-                        degree = - degree / (FPS * duration);
-                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "LeftLeg", skeleton), degree);
-                    }
-                }
-
-                // Right leg rotate about x axis
-                function riseRightLeg(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration) {
-                        // Counter clockwise
-                        degree = - degree / (FPS * duration);
-                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "RightLeg", skeleton), degree);
-                    }
-                }
-
-                // Rotate left foot about local y axis, positive degree indicates left rotate
-                function rotateLeftFoot(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration){
-                        // Counter clockwise, calculate degree change for one frame
-                        degree = degree / (FPS * duration);
-                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "LeftFoot", skeleton), degree);
-                    }
-                }
-
-                // Rotate right foot about local y axis, positive degree indicates left rotate
-                function rotateRightFoot(degree, startTime, duration) {
-                    if(startTime <= delta && delta <= startTime + duration){
-                        // Counter clockwise, calculate degree change for one frame
-                        degree = degree / (FPS * duration);
-                        rotateLocalY(SkeletonUtils.getBoneByName(prefix + "RightFoot", skeleton), degree);
-                    }
-                }
-
-                // Begin dance. Pause when finished
-                function dance(speed, startTime, duration){
-                    // FIXME: when more than one dance is called, the animation cannot play
-                    if (startTime <= delta && delta <= startTime + duration) {
-                        if(!action.isRunning()){
-                            action.timeScale = speed;
-                            action.play();
-                            action.fadeIn(0.4);
-                            console.log("Start play")
-                        }
-                    }
-                    else {
-                        if(action.isRunning()) {
-                            // action.fadeOut(1);
-                            action.paused = true;
-                        }
-                    }
-                }
-
-                /**
-                 * Let a body part rotate about its local x axis for a degree
-                 * @param bodyPart - body part to rotate
-                 * @param degree - degree to rotate
-                 */
-                function rotateLocalX(bodyPart, degree){
-                    bodyPart.rotateOnAxis(X, degree * DEG_TO_RAD);
-                }
-
-                /**
-                 * Let a body part rotate about its local y axis for a degree
-                 * @param bodyPart - body part to rotate
-                 * @param degree - degree to rotate
-                 */
-                function rotateLocalY(bodyPart, degree){
-                    // bodyPart.rotation.y += degree * DEG_TO_RAD;
-                    bodyPart.rotateOnAxis(Y, degree * DEG_TO_RAD);
-                }
-
-                /**
-                 * Let a body part rotate about its local z axis for a degree
-                 * @param bodyPart - body part to rotate
-                 * @param degree - degree to rotate
-                 */
-                function rotateLocalZ(bodyPart, degree){
-                    // bodyPart.rotation.z += degree * DEG_TO_RAD;
-                    bodyPart.rotateOnAxis(Z, degree * DEG_TO_RAD);
-                }
-
-                /**
-                 * Let a body part rotate about world x axis for a degree
-                 * @param bodyPart - body part to rotate
-                 * @param degree - degree to rotate
-                 */
-                function rotateWorldX(bodyPart, degree){
-                    bodyPart.rotateOnWorldAxis(X, degree * DEG_TO_RAD);
-                }
-
-                /**
-                 * Let a body part rotate about world y axis for a degree
-                 * @param bodyPart - body part to rotate
-                 * @param degree - degree to rotate
-                 */
-                function rotateWorldY(bodyPart, degree){
-                    bodyPart.rotateOnWorldAxis(Y, degree * DEG_TO_RAD);
-                }
-
-                /**
-                 * Let a body part rotate about world z axis for a degree
-                 * @param bodyPart - body part to rotate
-                 * @param degree - degree to rotate
-                 */
-                function rotateWorldZ(bodyPart, degree){
-                    bodyPart.rotateOnWorldAxis(Z, degree * DEG_TO_RAD);
-                }
-            }
-        }
     </script>
 </body>
 </html>

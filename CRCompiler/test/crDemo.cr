@@ -19,7 +19,15 @@ function testFunc2(a, b) {
 BEGIN
 
 Head.rotate(45, 2);
-LArm.raise(90, 4)
+LArm.raise(90, 4);
+RArm.raise(90,4);
+LArm.lateralRaise(90, 4);
+RArm.lateralRaise(90,4);
+
+LLeg.raise(90,4);
+RLeg.raise(90.4);
+LUpLeg.lateralRaise(90,4);
+RUpLeg.lateralRaise(90.4);
 
 END
 //some comment

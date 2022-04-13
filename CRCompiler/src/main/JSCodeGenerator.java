@@ -237,8 +237,8 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
 
     public void generateCode(String msg) {
         try {
-            writer.write("\n");
             writer.write(msg);
+            writer.write("\n");
         }
         catch (IOException e) {
             e.printStackTrace();
