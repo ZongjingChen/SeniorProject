@@ -331,9 +331,25 @@
                 // Right forearm rotate about its local y axis
                 function raiseRForeArm(degree, startTime, duration) {
                     if(startTime <= delta && delta <= startTime + duration){
-                        // Counter clockwise, calculate degree change for one frame
+                        // Clockwise, calculate degree change for one frame
                         degree = degree / (FPS * duration);
                         rotateLocalY(SkeletonUtils.getBoneByName(prefix + "RightForeArm", skeleton), degree);
+                    }
+                }
+
+                function rotateLForeArm(degree, startTime, duration) {
+                    if(startTime <= delta && delta <= startTime + duration){
+                        // Clockwise, calculate degree change for one frame
+                        degree = degree / (FPS * duration);
+                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "LeftForeArm", skeleton), degree);
+                    }
+                }
+
+                function rotateRForeArm(degree, startTime, duration) {
+                    if(startTime <= delta && delta <= startTime + duration){
+                        // Clockwise, calculate degree change for one frame
+                        degree = degree / (FPS * duration);
+                        rotateLocalX(SkeletonUtils.getBoneByName(prefix + "RightForeArm", skeleton), degree);
                     }
                 }
 

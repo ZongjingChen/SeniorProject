@@ -1,4 +1,4 @@
-package main.AST;
+package main.common;
 
 import java.util.Stack;
 
@@ -7,18 +7,18 @@ public class Timer {
         SIM, SEQ, GLOBAL
     }
 
-    private Stack<Scope> scope;
+    private Stack<Scope> scopes;
     private Stack<Double> times;
 
     public Timer() {
-        scope = new Stack<>();
-        scope.push(Scope.GLOBAL);
+        scopes = new Stack<>();
+        scopes.push(Scope.GLOBAL);
         times = new Stack<>();
         times.push(0.0);
     }
 
     public Scope getCurrentScope() {
-        return scope.peek();
+        return scopes.peek();
     }
 
     public double getCurrentTime() {
@@ -26,8 +26,8 @@ public class Timer {
     }
 
     public void pop() {
-        if(scope.peek() != Scope.GLOBAL) {
-            scope.pop();
+        if(scopes.peek() != Scope.GLOBAL) {
+            scopes.pop();
             times.pop();
         }
     }
@@ -38,7 +38,7 @@ public class Timer {
     }
 
     public void addNewTime(Scope scope, double time){
-        this.scope.push(scope);
+        scopes.push(scope);
         times.push(time);
     }
 

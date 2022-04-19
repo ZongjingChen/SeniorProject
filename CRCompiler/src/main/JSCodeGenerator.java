@@ -1,7 +1,7 @@
 package main;
 
 import main.AST.*;
-import main.AST.Timer;
+import main.common.Timer;
 import main.common.ErrorLog;
 import main.AST.ExpressionVisitor;
 import main.AST.Generator;
@@ -95,8 +95,10 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
         stack.push(current);
 
         // Only add new SEQ scope if this function call is in a sim block
+        boolean newScopeAdded = false;
         if(timer.getCurrentScope() == Timer.Scope.SIM) {
             timer.addNewTime(Timer.Scope.SEQ, timer.getCurrentTime());
+            newScopeAdded = true;
         }
 
         for(Statement statement : functionMap.get(functionCall.getIdent().getLexeme()).getStatements()) {
@@ -104,7 +106,7 @@ public class JSCodeGenerator implements Generator, ExpressionVisitor {
         }
 
         // Pop the SEQ scope
-        if(timer.getCurrentScope() == Timer.Scope.SIM) {
+        if(newScopeAdded) {
             timer.pop();
         }
 

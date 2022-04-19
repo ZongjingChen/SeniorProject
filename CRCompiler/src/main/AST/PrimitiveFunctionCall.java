@@ -1,6 +1,7 @@
 package main.AST;
 
 import main.common.Position;
+import main.common.Token;
 import main.common.TokenType;
 
 import java.util.List;
@@ -43,7 +44,8 @@ public class PrimitiveFunctionCall extends AbstractASTNode implements Statement,
             "raise", new TokenType[]{TokenType.LArm, TokenType.RArm, TokenType.LForeArm, TokenType.RForeArm,
                                         TokenType.LLeg, TokenType.RLeg, TokenType.LUpLeg, TokenType.RUpLeg, TokenType.Head},
             "lateralRaise", new TokenType[]{TokenType.LArm, TokenType.RArm, TokenType.LUpLeg, TokenType.RUpLeg},
-            "rotate", new TokenType[]{TokenType.Head, TokenType.Body, TokenType.LHand, TokenType.RHand, TokenType.LFoot, TokenType.RFoot},
+            "rotate", new TokenType[]{TokenType.Head, TokenType.Body, TokenType.LHand, TokenType.RHand, TokenType.LFoot, TokenType.RFoot,
+                                        TokenType.LForeArm, TokenType.RForeArm},
             "tilt", new TokenType[]{TokenType.Head, TokenType.Body},
             "dance", new TokenType[]{TokenType.Body},
             "bow", new TokenType[]{TokenType.Body}

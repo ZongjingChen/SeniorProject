@@ -16,12 +16,11 @@ A comment is any sequence of characters begins with '//'.
 ### Reserved Words
 
 ```
-MODEL, XBOT, YBOT, BEGIN, END, TIME
-if, else, elif, while, for, and, or, mod, not,
-function, sim, seq
+MODEL, XBOT, YBOT, BEGIN, END
+mod, function, sim, seq
 
 LArm, RArm, LForeArm, RForeArm, LHand, RHand,
-LLeg, RLeg, LUpLeg, RUpLe, LFoot, RFoot,
+LLeg, RLeg, LUpLeg, RUpLeg, LFoot, RFoot,
 Head, Body
             
 ```
