@@ -1,7 +1,7 @@
-# *<span style = "color:#ab4642">CR Tutorials</span>*
+# *<span style = "color:#ab4642">CR Documents</span>*
 CR language is a programming language designed for virtual robot control.
 
-In this tutorial, you will learn how to write a simple CR program.
+In this document, you will learn how to write a simple CR program.
 <br><br><br>
 
 # **<span style = "color:#ab4642">Basic Structure </span>**
