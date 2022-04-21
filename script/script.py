@@ -5,7 +5,6 @@ import time
 import re
 import threading
 
-
 template_path = '../templates/template.html'
 error_log_path = './Log/CompileError.log'
 
@@ -34,8 +33,7 @@ except AttributeError as e:
         print(f.read())
     sys.exit(1)
 finally:
-    pass
-    # os.system("del " + js_file_path)
+    os.system("del " + js_file_path)
 
 content = content.replace("MODEL_PATH_POSITION", modelDecl)
 content = content.replace("OUTPUT_POSITION", statements)
